@@ -1,6 +1,6 @@
 var config = require('./lib/config');
 var detect = require('./lib/detect');
-var selectBrowser = require('./lib/select');
+var run = require('./lib/run');
 var createProfiles = require('./lib/create_profiles');
 
 var spawn = require('child_process').spawn;
@@ -18,7 +18,7 @@ exports = module.exports = function (opts, cb) {
             detect(function (avail) {
                 createProfiles(avail, configDir, function (err) {
                     if (err) cb(err)
-                    else write({ local : avail });
+                    else write({ browsers : { local : avail } });
                 })
             });
         }
@@ -35,26 +35,16 @@ exports = module.exports = function (opts, cb) {
 exports.detect = detect;
 exports.config = config;
 
-function launcher (cfg, browser, opts) {
-    if (typeof browser === 'object') {
-        opts = browser;
-        browser = opts.browser;
-    }
+function launcher (cfg, uri, opts, cb) {
     if (typeof opts === 'string') {
-        uri = opts;
-        opts = {};
+        opts = { browser : opts };
     }
     if (!opts) opts = {};
     
-    var version = opts.version || browser.split('/')[1];
-    var name = browser.split('/')[0];
-    var selected = selectBrowser(cfg, name, version);
+    var version = opts.version || opts.browser.split('/')[1] || '*';
+    var name = opts.browser.split('/')[0];
     
-    return function (uri, opts) {
-        var cmd = selected(uri, {
-            proxy : opts.proxy,
-            headless : opts.headless,
-        });
-        return spawn(cmd[0], cmd.slice(1));
-    };
+    var runner = run(cfg, name, version);
+    if (!runner) return cb('no matches for ' + name + '/' + version);
+    runner(uri, opts, cb);
 }
