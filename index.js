@@ -22,13 +22,19 @@ exports = module.exports = function (opts, cb) {
                 })
             });
         }
-        else cb(null, launcher.bind(null, cfg))
+        else cb(null, wrap(cfg))
     });
+    
+    function wrap (cfg) {
+        var res = launcher.bind(null, cfg);
+        res.browsers = cfg.browsers;
+        return res;
+    }
     
     function write (cfg) {
         config.write(cfg, function (err) {
             if (err) cb(err)
-            else cb(null, launcher.bind(null, cfg))
+            else cb(null, wrap(cfg))
         })
     }
 };

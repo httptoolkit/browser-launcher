@@ -23,11 +23,41 @@ launcher(function (err, launch) {
     };
     launch('http://substack.net', opts, function (err, ps) {
         if (err) return console.error(err);
-        
-        ps.stderr.pipe(process.stderr, { end : false });
-        ps.stdout.pipe(process.stdout, { end : false });
     });
 });
+```
+
+***
+
+```
+$ node example/launch.js 
+# available browsers:
+{ local: 
+   [ { name: 'chrome',
+       re: {},
+       type: 'chrome',
+       profile: '/home/substack/.config/browser-launcher/chrome-17.0.963.12_9c0bdd8d',
+       command: 'google-chrome',
+       version: '17.0.963.12' },
+     { name: 'chromium',
+       re: {},
+       type: 'chrome',
+       profile: '/home/substack/.config/browser-launcher/chromium-18.0.1025.168_e025d855',
+       command: 'chromium-browser',
+       version: '18.0.1025.168' },
+     { name: 'phantom',
+       re: {},
+       type: 'phantom',
+       headless: true,
+       profile: '/home/substack/.config/browser-launcher/phantom-1.4.0_31767fa2',
+       command: 'phantomjs',
+       version: '1.4.0' },
+     { name: 'firefox',
+       re: {},
+       type: 'firefox',
+       profile: [Object],
+       command: 'firefox',
+       version: '12.0' } ] }
 ```
 
 # methods
