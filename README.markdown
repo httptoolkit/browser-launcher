@@ -86,6 +86,8 @@ which uses the `Xvfb` command to create a fake X server.
 To use the browser with a proxy, set `opts.proxy` as a colon-separated
 `'host:port'` string.
 
+Set proxy routes to skip over with `opts.noProxy`.
+
 `cb` fires with `cb(err, ps)` where `ps` is the process object created with
 `spawn()`.
 
