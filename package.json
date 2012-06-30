@@ -1,6 +1,6 @@
 {
     "name" : "browser-launcher",
-    "version" : "0.0.1",
+    "version" : "0.0.2",
     "description" : "detect and launch browser versions, headlessly or otherwise",
     "main" : "index.js",
     "bin" : {},

@@ -3,6 +3,7 @@ var detect = require('./lib/detect');
 var run = require('./lib/run');
 var createProfiles = require('./lib/create_profiles');
 
+var path = require('path');
 var spawn = require('child_process').spawn;
 
 exports = module.exports = function (opts, cb) {
@@ -15,11 +16,9 @@ exports = module.exports = function (opts, cb) {
     config.read(opts.config, function (err, cfg, configDir) {
         if (err) return cb(err);
         if (!cfg) {
-            detect(function (avail) {
-                createProfiles(avail, configDir, function (err) {
-                    if (err) cb(err)
-                    else write({ browsers : { local : avail } });
-                })
+            exports.setup(configDir, function (err, cfg) {
+                if (err) console.error(err)
+                else cb(null, wrap(cfg))
             });
         }
         else cb(null, wrap(cfg))
@@ -30,16 +29,26 @@ exports = module.exports = function (opts, cb) {
         res.browsers = cfg.browsers;
         return res;
     }
-    
-    function write (cfg) {
-        config.write(cfg, function (err) {
-            if (err) cb(err)
-            else cb(null, wrap(cfg))
-        })
-    }
 };
 exports.detect = detect;
 exports.config = config;
+
+exports.setup = function (configDir, cb) {
+    if (typeof configDir === 'function') {
+        cb = configDir;
+        configDir = path.dirname(config.defaultConfigFile);
+    }
+    detect(function (avail) {
+        createProfiles(avail, configDir, function (err) {
+            if (err) return cb(err);
+            var cfg = { browsers : { local : avail } };
+            config.write(cfg, function (err) {
+                if (err) cb(err)
+                else cb(null, cfg)
+            });
+        })
+    });
+};
 
 function launcher (cfg, uri, opts, cb) {
     if (typeof opts === 'string') {
