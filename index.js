@@ -16,7 +16,7 @@ exports = module.exports = function (opts, cb) {
     config.read(opts.config, function (err, cfg, configDir) {
         if (!cfg) {
             exports.setup(configDir, function (err, cfg) {
-                if (err) console.error(err)
+                if (err) cb(err)
                 else cb(null, wrap(cfg))
             });
         }
