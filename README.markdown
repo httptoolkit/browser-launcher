@@ -88,6 +88,9 @@ To use the browser with a proxy, set `opts.proxy` as a colon-separated
 
 Set proxy routes to skip over with `opts.noProxy`.
 
+You can pass additional options directly through to the browser commands with
+`opts.options`.
+
 `cb` fires with `cb(err, ps)` where `ps` is the process object created with
 `spawn()`.
 
