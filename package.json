@@ -1,6 +1,6 @@
 {
     "name" : "browser-launcher",
-    "version" : "0.3.1",
+    "version" : "0.3.2",
     "description" : "detect and launch browser versions, headlessly or otherwise",
     "main" : "index.js",
     "bin" : {},
@@ -9,11 +9,12 @@
         "test" : "test"
     },
     "dependencies" : {
-        "headless" : "~0.1.0",
+        "headless" : "~0.1.2",
         "merge" : "~1.0.0",
         "mkdirp" : "~0.3.3",
         "plist" : "0.2.1"
     },
+    "bundledDependencies" : [ "headless" ],
     "repository" : {
         "type" : "git",
         "url" : "git://github.com/substack/browser-launcher.git"
