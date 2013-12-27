@@ -1,42 +1,49 @@
 {
-    "name" : "browser-launcher",
-    "version" : "0.3.4",
-    "description" : "detect and launch browser versions, headlessly or otherwise",
-    "main" : "index.js",
-    "bin" : {},
-    "directories" : {
-        "example" : "example",
-        "test" : "test"
-    },
-    "dependencies" : {
-        "headless" : "~0.1.3",
-        "merge" : "~1.0.0",
-        "mkdirp" : "~0.3.3",
-        "plist" : "0.2.1"
-    },
-    "bundledDependencies" : [ "headless" ],
-    "repository" : {
-        "type" : "git",
-        "url" : "git://github.com/substack/browser-launcher.git"
-    },
-    "homepage" : "https://github.com/substack/browser-launcher",
-    "keywords" : [
-        "browser",
-        "headless",
-        "phantom",
-        "chrome",
-        "firefox",
-        "chromium",
-        "safari",
-        "ie",
-        "osx",
-        "windows"
-    ],
-    "author" : {
-        "name" : "James Halliday",
-        "email" : "mail@substack.net",
-        "url" : "http://substack.net"
-    },
-    "license" : "MIT",
-    "engine" : { "node" : ">=0.6" }
+  "name": "browser-launcher",
+  "version": "0.3.4",
+  "description": "detect and launch browser versions, headlessly or otherwise",
+  "main": "index.js",
+  "bin": {
+    "browser-launcher": "bin/cmd.js"
+  },
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "dependencies": {
+    "headless": "~0.1.3",
+    "merge": "~1.0.0",
+    "mkdirp": "~0.3.3",
+    "plist": "0.2.1",
+    "minimist": "0.0.5"
+  },
+  "bundledDependencies": [
+    "headless"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/substack/browser-launcher.git"
+  },
+  "homepage": "https://github.com/substack/browser-launcher",
+  "keywords": [
+    "browser",
+    "headless",
+    "phantom",
+    "chrome",
+    "firefox",
+    "chromium",
+    "safari",
+    "ie",
+    "osx",
+    "windows"
+  ],
+  "author": {
+    "name": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net"
+  },
+  "license": "MIT",
+  "engine": {
+    "node": ">=0.6"
+  }
 }
