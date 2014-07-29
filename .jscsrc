@@ -33,16 +33,13 @@
 		"?", "=", "+", "-", "/", "*", "==", "===", "!=", "!==", ">", ">=", "<", "<=", "|", "||", "&", "&&", "^",
 		"+=", "*=", "-=", "/=", "^="
 	],
-	"disallowLeftStickedOperators": [
-		"?", "=", "+", "-", "/", "*", "==", "===", "!=", "!==", ">", ">=", "<", "<=", "|", "||", "&", "&&", "^",
-		"+=", "*=", "-=", "/=", "^="
-	],
-	"disallowRightStickedOperators": [
-		"?", "=", "/", "*", "==", "===", "!=", "!==", ">", ">=", "<", "<=", "|", "||", "&", "&&", "^",
-		"+=", "*=", "-=", "/=", "^="
-	],
 	"requireSpaceBeforeBinaryOperators": [
-		"+", "-", "/", "*", "==", "===", "!=", "!=="
+		"+", "-", "/", "*", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<=", "|", "||", "&", "&&", "^",
+		"+=", "*=", "-=", "/=", "^="
+	],
+	"requireSpaceAfterBinaryOperators": [
+		"+", "-", "/", "*", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<=", "|", "||", "&", "&&", "^",
+		"+=", "*=", "-=", "/=", "^="
 	],
 	"disallowSpaceAfterPrefixUnaryOperators": [
 		"++", "--", "+", "-", "~", "!"
@@ -61,7 +58,5 @@
 	"maximumLineLength": 120,
 	"safeContextKeyword": [ "that", "bender" ],
 	"requireDotNotation": true,
-	"disallowYodaConditions": true,
-	"requireLeftStickedOperators": [ "," ],
-	"requireRightStickedOperators": [ "!" ]
+	"disallowYodaConditions": true
 }

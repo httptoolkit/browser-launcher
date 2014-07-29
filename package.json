@@ -4,7 +4,7 @@
 	"description": "detect and launch browser versions, headlessly or otherwise",
 	"main": "index.js",
 	"scripts": {
-		"lint": "jscs . && jshint index lib/ example/"
+		"lint": "jscs . && jshint index.js lib/ example/"
 	},
 	"directories": {
 		"example": "example",
