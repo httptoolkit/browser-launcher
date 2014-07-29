@@ -1,5 +1,4 @@
 var path = require( 'path' ),
-	spawn = require( 'child_process' ).spawn,
 	config = require( './lib/config' ),
 	detect = require( './lib/detect' ),
 	run = require( './lib/run' ),
