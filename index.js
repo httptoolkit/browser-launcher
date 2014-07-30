@@ -44,15 +44,15 @@ exports.setup = function( configDir, cb ) {
 		configDir = path.dirname( config.defaultConfigFile );
 	}
 
-	detect( function( avail ) {
-		createProfiles( avail, configDir, function( err ) {
+	detect( function( available ) {
+		createProfiles( available, configDir, function( err ) {
 			if ( err ) {
 				return cb( err );
 			}
 
 			var cfg = {
 				browsers: {
-					local: avail
+					local: available
 				}
 			};
 
