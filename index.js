@@ -77,7 +77,7 @@ function launcher( cfg, uri, opts, cb ) {
 	opts = opts || {};
 
 	var version = opts.version || opts.browser.split( '/' )[ 1 ] || '*',
-		name = opts.browser.split( '/' )[ 0 ],
+		name = opts.browser.toLowerCase().split( '/' )[ 0 ],
 		runner = run( cfg, name, version );
 
 	if ( !runner ) {

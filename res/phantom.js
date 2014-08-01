@@ -17,6 +17,18 @@ function renderPage( url ) {
 		}
 	};
 
+	// handle logs
+	page.onConsoleMessage = function( msg ) {
+		console.log( 'console: ' + msg );
+	};
+
+	page.onError = function( msg, trace ) {
+		console.log( 'error:', msg );
+		trace.forEach( function( item ) {
+			console.log( '  ', item.file, ':', item.line );
+		} );
+	};
+
 	page.open( url, function( status ) {
 		if ( status !== 'success' ) {
 			phantom.exit( 1 );
