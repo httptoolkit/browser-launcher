@@ -4,32 +4,32 @@ var path = require( 'path' ),
 	run = require( './lib/run' ),
 	createProfiles = require( './lib/create_profiles' );
 
-exports = module.exports = function( opts, cb ) {
-	if ( typeof opts === 'function' ) {
-		cb = opts;
-		opts = {};
+exports = module.exports = function( options, callback ) {
+	if ( typeof options === 'function' ) {
+		callback = options;
+		options = {};
 	}
 
-	opts = opts || {};
+	options = options || {};
 
-	config.read( opts.config, function( err, cfg, configDir ) {
-		if ( !cfg ) {
-			exports.setup( configDir, function( err, cfg ) {
+	config.read( options.config, function( err, config, configDir ) {
+		if ( !config ) {
+			exports.setup( configDir, function( err, config ) {
 				if ( err ) {
-					cb( err );
+					callback( err );
 				} else {
-					cb( null, wrap( cfg ) );
+					callback( null, wrap( config ) );
 				}
 			} );
 		} else {
-			cb( null, wrap( cfg ) );
+			callback( null, wrap( config ) );
 		}
 	} );
 
-	function wrap( cfg ) {
-		var res = launcher.bind( null, cfg );
+	function wrap( config ) {
+		var res = launcher.bind( null, config );
 
-		res.browsers = cfg.browsers;
+		res.browsers = config.browsers;
 
 		return res;
 	}
@@ -38,49 +38,49 @@ exports = module.exports = function( opts, cb ) {
 exports.detect = detect;
 exports.config = config;
 
-exports.setup = function( configDir, cb ) {
+exports.setup = function( configDir, callback ) {
 	if ( typeof configDir === 'function' ) {
-		cb = configDir;
+		callback = configDir;
 		configDir = path.dirname( config.defaultConfigFile );
 	}
 
 	detect( function( available ) {
 		createProfiles( available, configDir, function( err ) {
 			if ( err ) {
-				return cb( err );
+				return callback( err );
 			}
 
-			var cfg = {
+			var config = {
 				browsers: available
 			};
 
-			config.write( cfg, function( err ) {
+			config.write( config, function( err ) {
 				if ( err ) {
-					cb( err );
+					callback( err );
 				} else {
-					cb( null, cfg );
+					callback( null, config );
 				}
 			} );
 		} );
 	} );
 };
 
-function launcher( cfg, uri, opts, cb ) {
-	if ( typeof opts === 'string' ) {
-		opts = {
-			browser: opts
+function launcher( config, uri, options, callback ) {
+	if ( typeof options === 'string' ) {
+		options = {
+			browser: options
 		};
 	}
 
-	opts = opts || {};
+	options = options || {};
 
-	var version = opts.version || opts.browser.split( '/' )[ 1 ] || '*',
-		name = opts.browser.toLowerCase().split( '/' )[ 0 ],
-		runner = run( cfg, name, version );
+	var version = options.version || options.browser.split( '/' )[ 1 ] || '*',
+		name = options.browser.toLowerCase().split( '/' )[ 0 ],
+		runner = run( config, name, version );
 
 	if ( !runner ) {
-		return cb( 'no matches for ' + name + '/' + version );
+		return callback( 'no matches for ' + name + '/' + version );
 	}
 
-	runner( uri, opts, cb );
+	runner( uri, options, callback );
 }
