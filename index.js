@@ -2,6 +2,7 @@ var path = require( 'path' ),
 	config = require( './lib/config' ),
 	detect = require( './lib/detect' ),
 	run = require( './lib/run' ),
+	_ = require( 'lodash' ),
 	createProfiles = require( './lib/create_profiles' );
 
 exports = module.exports = function( options, callback ) {
@@ -35,8 +36,13 @@ exports = module.exports = function( options, callback ) {
 	}
 };
 
-exports.detect = detect;
-exports.config = config;
+exports.detect = function( callback ) {
+	detect( function( browsers ) {
+		callback( browsers.map( function( browser ) {
+			return _.pick( browser, [ 'name', 'version', 'type', 'command' ] );
+		} ) );
+	} );
+};
 
 exports.setup = function( configDir, callback ) {
 	if ( typeof configDir === 'function' ) {
@@ -64,6 +70,8 @@ exports.setup = function( configDir, callback ) {
 		} );
 	} );
 };
+
+exports.config = config;
 
 function launcher( config, uri, options, callback ) {
 	if ( typeof options === 'string' ) {
