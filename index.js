@@ -1,21 +1,19 @@
 var path = require( 'path' ),
+	_ = require( 'lodash' ),
 	config = require( './lib/config' ),
 	detect = require( './lib/detect' ),
 	run = require( './lib/run' ),
-	_ = require( 'lodash' ),
 	createProfiles = require( './lib/create_profiles' );
 
-exports = module.exports = function( options, callback ) {
-	if ( typeof options === 'function' ) {
-		callback = options;
-		options = {};
+module.exports = function( configFile, callback ) {
+	if ( typeof configFile === 'function' ) {
+		callback = configFile;
+		configFile = null;
 	}
 
-	options = options || {};
-
-	config.read( options.config, function( err, config, configDir ) {
+	config.read( configFile, function( err, config, configDir ) {
 		if ( !config ) {
-			exports.setup( configDir, function( err, config ) {
+			module.exports.update( configDir, function( err, config ) {
 				if ( err ) {
 					callback( err );
 				} else {
@@ -28,15 +26,35 @@ exports = module.exports = function( options, callback ) {
 	} );
 
 	function wrap( config ) {
-		var res = launcher.bind( null, config );
+		var res = launch.bind( null, config );
 
 		res.browsers = config.browsers;
 
 		return res;
 	}
+
+	function launch( config, uri, options, callback ) {
+		if ( typeof options === 'string' ) {
+			options = {
+				browser: options
+			};
+		}
+
+		options = options || {};
+
+		var version = options.version || options.browser.split( '/' )[ 1 ] || '*',
+			name = options.browser.toLowerCase().split( '/' )[ 0 ],
+			runner = run( config, name, version );
+
+		if ( !runner ) {
+			return callback( 'no matches for ' + name + '/' + version );
+		}
+
+		runner( uri, options, callback );
+	}
 };
 
-exports.detect = function( callback ) {
+module.exports.detect = function( callback ) {
 	detect( function( browsers ) {
 		callback( browsers.map( function( browser ) {
 			return _.pick( browser, [ 'name', 'version', 'type', 'command' ] );
@@ -44,7 +62,7 @@ exports.detect = function( callback ) {
 	} );
 };
 
-exports.setup = function( configDir, callback ) {
+module.exports.update = function( configDir, callback ) {
 	if ( typeof configDir === 'function' ) {
 		callback = configDir;
 		configDir = path.dirname( config.defaultConfigFile );
@@ -71,24 +89,4 @@ exports.setup = function( configDir, callback ) {
 	} );
 };
 
-exports.config = config;
-
-function launcher( config, uri, options, callback ) {
-	if ( typeof options === 'string' ) {
-		options = {
-			browser: options
-		};
-	}
-
-	options = options || {};
-
-	var version = options.version || options.browser.split( '/' )[ 1 ] || '*',
-		name = options.browser.toLowerCase().split( '/' )[ 0 ],
-		runner = run( config, name, version );
-
-	if ( !runner ) {
-		return callback( 'no matches for ' + name + '/' + version );
-	}
-
-	runner( uri, options, callback );
-}
+module.exports.config = config;
