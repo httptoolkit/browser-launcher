@@ -1,14 +1,14 @@
 {
-	"name": "browser-launcher",
+	"name": "browser-launcher2",
 	"version": "0.3.4",
-	"description": "detect and launch browser versions, headlessly or otherwise",
+	"description": "Detect, launch and stop browser versions",
 	"main": "index.js",
 	"scripts": {
 		"lint": "jscs . && jshint index.js lib/ example/"
 	},
 	"directories": {
 		"example": "example",
-		"test": "test"
+		"res": "res"
 	},
 	"dependencies": {
 		"headless": "^0.1.7",
@@ -20,9 +20,9 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/benderjs/browser-launcher.git"
+		"url": "git://github.com/benderjs/browser-launcher2.git"
 	},
-	"homepage": "https://github.com/benderjs/browser-launcher",
+	"homepage": "https://github.com/benderjs/browser-launcher2",
 	"keywords": [
 		"browser",
 		"headless",
@@ -32,14 +32,14 @@
 		"chromium",
 		"safari",
 		"ie",
+		"opera",
 		"osx",
 		"windows"
 	],
-	"author": {
-		"name": "James Halliday",
-		"email": "mail@substack.net",
-		"url": "http://substack.net"
-	},
+	"author": "James Halliday <mail@substack.net> (http://substack.net)",
+	"contributors": [
+		"CKSource (http://cksource.com/)"
+	],
 	"license": "MIT",
 	"engine": {
 		"node": ">=0.8"

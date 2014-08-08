@@ -115,7 +115,7 @@ var launcher = require('browser-launcher2');
 
 ### `launcher([configPath], callback)`
 
-Detect available browsers and return launch function.
+Detect available browsers and pass `launch` function to the callback.
 
 **Parameters:**
 - *String* `configPath` - path to a browser configuration file *(Optional)*
@@ -162,6 +162,8 @@ Browser instance object.
 
 ### `launcher.detect(callback)`
 
+Detects all browsers available.
+
 **Parameters:**
 - *Function* `callback(available)` - function called with array of all recognized browsers
 
@@ -173,11 +175,11 @@ Each browser contains following properties:
 
 ### `launcher.update([configDir], callback)`
 
+Updates the browsers cache file (`~/.config/browser-launcher/config.json` is no `configDir` was given) and creates new profiles for found browsers.
+
 **Parameters:**
 - *String* `configDir` - path to a directory containing configuration file *Optional*
 - *Function* `callback(err, browsers)` - function called with found browsers and errors (if any)
- 
-Updates the browsers cache file (`~/.config/browser-launcher/config.json` is no `configDir` was given) and creates new profiles for found browsers.
 
 ## License
 
