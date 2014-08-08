@@ -51,9 +51,7 @@ exports.setup = function( configDir, cb ) {
 			}
 
 			var cfg = {
-				browsers: {
-					local: available
-				}
+				browsers: available
 			};
 
 			config.write( cfg, function( err ) {
