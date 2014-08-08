@@ -5,20 +5,15 @@ launcher( function( err, launch ) {
 		return console.error( err );
 	}
 
-	console.log( '# available browsers:' );
-	console.dir( launch.browsers );
-
-	var opts = {
-		browser: 'chrome',
-		//options:['--remote-debugging-port=9222','--disable-hang-monitor'],
-		//headless : true,
-		//proxy : 'localhost:7077',
-	};
-	launch( 'http://substack.net', opts, function( err, ps ) {
+	launch( 'http://cksource.com/', 'chrome', function( err, instance ) {
 		if ( err ) {
 			return console.error( err );
 		}
 
-		ps.on( 'exit', console.log );
+		console.log( 'Instance started with PID:', instance.pid );
+
+		instance.on( 'stop', function( code ) {
+			console.log( 'Instance stopped with exit code:', code );
+		} );
 	} );
 } );
