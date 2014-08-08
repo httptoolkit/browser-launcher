@@ -115,14 +115,18 @@ var launcher = require('browser-launcher2');
 
 ### `launcher([configPath], callback)`
 
+Detect available browsers and return launch function.
+
 **Parameters:**
 - *String* `configPath` - path to a browser configuration file *(Optional)*
 - *Function* `callback(err, launch)` - function called with `launch` function and errors (if any)
 
 ### `launch(uri, options, callback)`
 
+Open given URI in a browser and return an instance of it.
+
 **Parameters:**
-- *String* `uri` - a URI to open in a newly started browser
+- *String* `uri` - URI to open in a newly started browser
 - *Object|String* `options` - configuration options or name of a browser to launch
 - *String* `options.browser` - name of a browser to launch
 - *String* `options.version` - version of a browser to launch, if none was given, the highest available version will be launched
@@ -130,11 +134,31 @@ var launcher = require('browser-launcher2');
 - *String* `options.proxy` - URI of the proxy server
 - *Boolean* `options.noProxy` - set proxy routes to skip over
 - *Boolean* `options.headless` - run a browser in a headless mode (only if **Xvfb** available)
-- *Function `callback(err, instance)` - function fired when started a browser instance or an error occurred
+- *Function* `callback(err, instance)` - function fired when started a browser `instance` or an error occurred
 
 ### `launch.browsers`
 
 This property contains an array of all known and available browsers.
+
+### `instance`
+
+Browser instance object.
+
+**Properties:**
+- *String* `command` - command used to start the instance
+- *Array* `args` - array of command line arguments used while starting the instance
+- *String* `image` - instance's image name
+- *String* `processName` - instance's process name
+- *Object* `process` - reference to instance's process started with Node's `child_process.spawn` API
+- *Number* `pid` - instance's process PID
+- *Stream* `stdout` - instance's process STDOUT stream
+- *Stream* `stderr` - instance's process STDERR stream
+
+**Events:**
+- `stop` - fired when instance stops
+
+**Methods:**
+- `stop(callback)` - stop the instance and fire the callback once stopped
 
 ### `launcher.detect(callback)`
 
