@@ -2,6 +2,7 @@ var config = require('./lib/config');
 var detect = require('./lib/detect');
 var run = require('./lib/run');
 var createProfiles = require('./lib/create_profiles');
+var extend = require('xtend');
 
 var path = require('path');
 var spawn = require('child_process').spawn;
@@ -48,14 +49,6 @@ exports.setup = function (configDir, cb) {
         })
     });
 };
-
-function extend (target, source) {
-  target || (target = {});
-  for (var prop in source) {
-    target[prop] = source[prop];
-  }
-  return target;
-}
 
 function launcher (cfg, uri, opts, cb) {
     if (typeof opts === 'string') {
