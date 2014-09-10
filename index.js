@@ -1,6 +1,6 @@
 var path = require( 'path' ),
 	_ = require( 'lodash' ),
-	config = require( './lib/config' ),
+	configModule = require( './lib/config' ),
 	detect = require( './lib/detect' ),
 	run = require( './lib/run' ),
 	createProfiles = require( './lib/create_profiles' );
@@ -11,7 +11,7 @@ module.exports = function( configFile, callback ) {
 		configFile = null;
 	}
 
-	config.read( configFile, function( err, config, configDir ) {
+	configModule.read( configFile, function( err, config, configDir ) {
 		if ( !config ) {
 			module.exports.update( configDir, function( err, config ) {
 				if ( err ) {
@@ -65,7 +65,7 @@ module.exports.detect = function( callback ) {
 module.exports.update = function( configDir, callback ) {
 	if ( typeof configDir === 'function' ) {
 		callback = configDir;
-		configDir = path.dirname( config.defaultConfigFile );
+		configDir = path.dirname( configModule.defaultConfigFile );
 	}
 
 	detect( function( available ) {
@@ -78,7 +78,7 @@ module.exports.update = function( configDir, callback ) {
 				browsers: available
 			};
 
-			config.write( config, function( err ) {
+			configModule.write( config, function( err ) {
 				if ( err ) {
 					callback( err );
 				} else {
@@ -89,4 +89,4 @@ module.exports.update = function( configDir, callback ) {
 	} );
 };
 
-module.exports.config = config;
+module.exports.config = configModule;
