@@ -181,6 +181,14 @@ Updates the browsers cache file (`~/.config/browser-launcher/config.json` is no 
 - *String* `configDir` - path to a directory containing configuration file *Optional*
 - *Function* `callback(err, browsers)` - function called with found browsers and errors (if any)
 
+## Known Issues
+
+- Firefox: after several starts and stops, Firefox will eventually come up with a pop-up asking to launch
+ it in the Safe Mode (#21)
+- Firefox: it's not possible to launch multiple instances of Firefox at once
+- IE8: after several starts and stops, IE will eventually come up with a pop-up asking if we want to restore tabs (#21)
+- Chrome @ OSX: it's not possible to launch multiple instances of Chrome at once
+
 ## License
 
 MIT
