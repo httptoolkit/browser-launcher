@@ -5,12 +5,16 @@ launcher( function( err, launch ) {
 		return console.error( err );
 	}
 
-	launch( 'http://cksource.com/', 'chrome', function( err, instance ) {
+	launch( 'http://cksource.com/', process.env.BROWSER || 'chrome', function( err, instance ) {
 		if ( err ) {
 			return console.error( err );
 		}
 
 		console.log( 'Instance started with PID:', instance.pid );
+
+    setTimeout( function() {
+      instance.stop();
+    }, 10000 );
 
 		instance.on( 'stop', function( code ) {
 			console.log( 'Instance stopped with exit code:', code );
