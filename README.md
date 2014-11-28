@@ -183,10 +183,8 @@ Updates the browsers cache file (`~/.config/browser-launcher/config.json` is no 
 
 ## Known Issues
 
-- Firefox: after several starts and stops, Firefox will eventually come up with a pop-up asking to launch
- it in the Safe Mode (#21)
 - Firefox: it's not possible to launch multiple instances of Firefox at once
-- IE8: after several starts and stops, IE will eventually come up with a pop-up asking if we want to restore tabs (#21)
+- IE8: after several starts and stops, if you manually open IE it willcome up with a pop-up asking if we want to restore tabs (#21)
 - Chrome @ OSX: it's not possible to launch multiple instances of Chrome at once
 
 ## License
