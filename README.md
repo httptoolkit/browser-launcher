@@ -28,7 +28,7 @@ At the moment, `browser-launcher2` supports following browsers on Windows, Unix 
 - IE (Windows only)
 - Opera
 - Safari
-- PhantomJS
+- PhantomJS (Linux and OS X only)
 
 ## Install
 
@@ -64,7 +64,7 @@ launcher( function( err, launch ) {
 Outputs:
 
 ```
-$ node example/launch.js 
+$ node example/launch.js
 Instance started with PID: 12345
 Instance stopped with exit code: 0
 ```
@@ -82,28 +82,28 @@ launcher.detect( function( available ) {
 Outputs:
 
 ```bash
-$ node example/detect.js 
+$ node example/detect.js
 Available browsers:
 [ { name: 'chrome',
-    version: '36.0.1985.125',
-    type: 'chrome',
-    command: 'google-chrome' },
-  { name: 'chromium',
-    version: '36.0.1985.125',
-    type: 'chrome',
-    command: 'chromium-browser' },
-  { name: 'firefox',
-    version: '31.0',
-    type: 'firefox',
-    command: 'firefox' },
-  { name: 'phantomjs',
-    version: '1.9.7',
-    type: 'phantom',
-    command: 'phantomjs' },
-  { name: 'opera',
-    version: '12.16',
-    type: 'opera',
-    command: 'opera' } ]
+		version: '36.0.1985.125',
+		type: 'chrome',
+		command: 'google-chrome' },
+	{ name: 'chromium',
+		version: '36.0.1985.125',
+		type: 'chrome',
+		command: 'chromium-browser' },
+	{ name: 'firefox',
+		version: '31.0',
+		type: 'firefox',
+		command: 'firefox' },
+	{ name: 'phantomjs',
+		version: '1.9.7',
+		type: 'phantom',
+		command: 'phantomjs' },
+	{ name: 'opera',
+		version: '12.16',
+		type: 'opera',
+		command: 'opera' } ]
 ```
 
 
