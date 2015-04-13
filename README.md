@@ -106,6 +106,30 @@ Available browsers:
 		command: 'opera' } ]
 ```
 
+### Detaching the launched browser process from your script
+
+If you want the opened browser to remain open after killing your script, first, you need to set `options.detached` to `true` (see the API). By default, killing your script will kill the opened browsers.
+
+Then, if you want your script to immediately return control to the shell, you may additionally call `unref` on the `instance` object in the callback:
+
+```js
+var launcher = require('browser-launcher2');
+launcher( function (err, launch) {
+	launch( 'http://example.org/', {
+		browser: 'chrome',
+		detached: true
+    }, function( err, instance ) {
+		if ( err ) {
+			return console.error( err );
+		}
+
+		instance.process.unref();
+		instance.process.stdin.unref();
+		instance.process.stdout.unref();
+		instance.process.stderr.unref();
+	} );
+});
+```
 
 ## API
 
@@ -132,6 +156,7 @@ Open given URI in a browser and return an instance of it.
 - *String* `options.version` - version of a browser to launch, if none was given, the highest available version will be launched
 - *Array* `options.options` - additional command line options
 - *String* `options.proxy` - URI of the proxy server
+- *Boolean* `options.detached` - if true, then killing your script will not kill the opened browser
 - *Boolean* `options.noProxy` - set proxy routes to skip over
 - *Boolean* `options.headless` - run a browser in a headless mode (only if **Xvfb** available)
 - *Function* `callback(err, instance)` - function fired when started a browser `instance` or an error occurred
