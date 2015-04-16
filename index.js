@@ -54,10 +54,17 @@ function getLauncher( configFile, callback ) {
 			runner = run( config, name, version );
 
 		if ( !runner ) {
-			return callback( 'no matches for ' + name + '/' + version );
-		}
+			// update the list of available browsers and retry
+			getLauncher.update( configFile, function( err, config ) {
+				if ( !( runner = run( config, name, version ) ) ) {
+					return callback( 'no matches for ' + name + '/' + version );
+				}
 
-		runner( uri, options, callback );
+				runner( uri, options, callback );
+			} );
+		} else {
+			runner( uri, options, callback );
+		}
 	}
 }
 
