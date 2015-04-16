@@ -12,15 +12,15 @@ var path = require( 'path' ),
  * @param {String}   [configFile] Path to a configuration file
  * @param {Function} callback     Callback function
  */
-module.exports = function getLauncher( configFile, callback ) {
+function getLauncher( configFile, callback ) {
 	if ( typeof configFile === 'function' ) {
 		callback = configFile;
-		configFile = null;
+		configFile = configModule.defaultConfigFile;
 	}
 
-	configModule.read( configFile, function( err, config, configDir ) {
+	configModule.read( configFile, function( err, config ) {
 		if ( !config ) {
-			module.exports.update( configDir, function( err, config ) {
+			getLauncher.update( configFile, function( err, config ) {
 				if ( err ) {
 					callback( err );
 				} else {
@@ -59,13 +59,13 @@ module.exports = function getLauncher( configFile, callback ) {
 
 		runner( uri, options, callback );
 	}
-};
+}
 
 /**
  * Detect available browsers
  * @param {Function} callback Callback function
  */
-module.exports.detect = function( callback ) {
+getLauncher.detect = function( callback ) {
 	detect( function( browsers ) {
 		callback( browsers.map( function( browser ) {
 			return _.pick( browser, [ 'name', 'version', 'type', 'command' ] );
@@ -78,7 +78,7 @@ module.exports.detect = function( callback ) {
  * @param {String}   configDir Path to the configuration file
  * @param {Function} callback  Callback function
  */
-module.exports.update = function( configFile, callback ) {
+getLauncher.update = function( configFile, callback ) {
 	if ( typeof configFile === 'function' ) {
 		callback = configFile;
 		configFile = configModule.defaultConfigFile;
@@ -105,4 +105,4 @@ module.exports.update = function( configFile, callback ) {
 	} );
 };
 
-module.exports.config = configModule;
+module.exports = getLauncher;
