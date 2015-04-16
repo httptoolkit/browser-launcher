@@ -5,7 +5,13 @@ var path = require( 'path' ),
 	run = require( './lib/run' ),
 	createProfiles = require( './lib/create_profiles' );
 
-module.exports = function( configFile, callback ) {
+/**
+ * Check the configuration and get the launcher function.
+ * If there's no config ready, detect available browsers first.
+ * @param {String}   [configFile] Path to a configuration file
+ * @param {Function} callback     Callback function
+ */
+module.exports = function getLauncher( configFile, callback ) {
 	if ( typeof configFile === 'function' ) {
 		callback = configFile;
 		configFile = null;
@@ -54,6 +60,10 @@ module.exports = function( configFile, callback ) {
 	}
 };
 
+/**
+ * Detect available browsers
+ * @param {Function} callback Callback function
+ */
 module.exports.detect = function( callback ) {
 	detect( function( browsers ) {
 		callback( browsers.map( function( browser ) {
@@ -62,23 +72,28 @@ module.exports.detect = function( callback ) {
 	} );
 };
 
-module.exports.update = function( configDir, callback ) {
-	if ( typeof configDir === 'function' ) {
-		callback = configDir;
-		configDir = path.dirname( configModule.defaultConfigFile );
+/**
+ * Update the browsers cache and create new profiles if necessary
+ * @param {String}   configDir Path to the configuration file
+ * @param {Function} callback  Callback function
+ */
+module.exports.update = function( configFile, callback ) {
+	if ( typeof configFile === 'function' ) {
+		callback = configFile;
+		configFile = configModule.defaultConfigFile;
 	}
 
-	detect( function( available ) {
-		createProfiles( available, configDir, function( err ) {
+	detect( function( browsers ) {
+		createProfiles( browsers, path.dirname( configFile ), function( err ) {
 			if ( err ) {
 				return callback( err );
 			}
 
 			var config = {
-				browsers: available
+				browsers: browsers
 			};
 
-			configModule.write( config, function( err ) {
+			configModule.write( configFile, config, function( err ) {
 				if ( err ) {
 					callback( err );
 				} else {

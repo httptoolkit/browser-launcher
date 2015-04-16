@@ -198,12 +198,12 @@ Each browser contains following properties:
 - `type` - type of a browser i.e. browser's family
 - `command` - command used to launch a browser
 
-### `launcher.update([configDir], callback)`
+### `launcher.update([configFile], callback)`
 
-Updates the browsers cache file (`~/.config/browser-launcher/config.json` is no `configDir` was given) and creates new profiles for found browsers.
+Updates the browsers cache file (`~/.config/browser-launcher/config.json` is no `configFile` was given) and creates new profiles for found browsers.
 
 **Parameters:**
-- *String* `configDir` - path to a directory containing configuration file *Optional*
+- *String* `configFile` - path to the configuration file *Optional*
 - *Function* `callback(err, browsers)` - function called with found browsers and errors (if any)
 
 ## Known Issues
