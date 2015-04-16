@@ -6,8 +6,9 @@ var path = require( 'path' ),
 	createProfiles = require( './lib/create_profiles' );
 
 /**
- * Check the configuration and get the launcher function.
+ * Check the configuration and prepare a launcher function.
  * If there's no config ready, detect available browsers first.
+ * Finally, pass a launcher function to the callback.
  * @param {String}   [configFile] Path to a configuration file
  * @param {Function} callback     Callback function
  */
