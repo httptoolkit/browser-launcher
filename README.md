@@ -30,7 +30,7 @@ At the moment, `browser-launcher2` supports following browsers on Windows, Unix 
 - IE (Windows only)
 - Opera
 - Safari
-- PhantomJS (Linux and OS X only)
+- PhantomJS
 
 ## Install
 
@@ -210,8 +210,7 @@ Updates the browsers cache file (`~/.config/browser-launcher/config.json` is no 
 
 ## Known Issues
 
-- Firefox: it's not possible to launch multiple instances of Firefox at once
-- IE8: after several starts and stops, if you manually open IE it willcome up with a pop-up asking if we want to restore tabs (#21)
+- IE8: after several starts and stops, if you manually open IE it will come up with a pop-up asking if we want to restore tabs (#21)
 - Chrome @ OSX: it's not possible to launch multiple instances of Chrome at once
 
 ## License
