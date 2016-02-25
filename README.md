@@ -5,10 +5,20 @@
 Detect the browser versions available on your system and launch them in an
 isolated profile for automated testing purposes.
 
-You can launch browsers headlessly (using [Xvfb](http://en.wikipedia.org/wiki/Xvfb) or with [PhantomJS](http://phantomjs.org/)) and set
-the proxy configuration on the fly.
+You can launch browsers headlessly
+(using [Xvfb](http://en.wikipedia.org/wiki/Xvfb) or with [PhantomJS](http://phantomjs.org/)) and set the proxy
+configuration on the fly.
 
-It's a fork of [substack/browser-launcher](https://github.com/substack/browser-launcher) repository which seems to be no longer maintained.
+At the beginning of time, there was [substack/browser-launcher](https://github.com/substack/browser-launcher),
+and all was well with the world. However, life happened, and the project became unmaintained.
+Out of the ashes, a leader emerged, and promised the citizens of `npm` that `browser-launcher` would become great again,
+but under a new banner: [`browser-launcher2`](https://github.com/benderjs/browser-launcher2).
+The world was once again prosperous, until we were eventually notified that
+[the king had forsaken us](https://github.com/benderjs/browser-launcher2/pull/45#issuecomment-147356133) (which
+happens, it's open source, and `benderjs` did a lot for the community, which is awesome!)
+
+Anyways, due to the project's dependence on `browser-launcher2`, `james-proxy` forked the project to make some
+much-needed updates and fix some problems.
 
 ## Differences from *browser-launcher*
 
@@ -18,11 +28,15 @@ It's a fork of [substack/browser-launcher](https://github.com/substack/browser-l
 - uses [win-detect-browsers](https://github.com/vweevers/win-detect-browsers) for browser detection on Windows
 - more browsers supported
 
+## Differences from *browser-launcher2*
+
+- Not dead
+
 ## Supported browsers
 
 The goal for this module is to support all major browsers on every desktop platform.
 
-At the moment, `browser-launcher2` supports following browsers on Windows, Unix and OS X:
+At the moment, `james-browser-launcher` supports following browsers on Windows, Unix and OS X:
 
 - Chrome
 - Chromium
@@ -35,14 +49,14 @@ At the moment, `browser-launcher2` supports following browsers on Windows, Unix 
 ## Install
 
 ```
-npm install browser-launcher2
+npm install james-browser-launcher
 ```
 
 ## Example
 
 ### Browser launch
 ```js
-var launcher = require( 'browser-launcher2' );
+var launcher = require( 'james-browser-launcher' );
 
 launcher( function( err, launch ) {
 	if ( err ) {
@@ -115,7 +129,7 @@ If you want the opened browser to remain open after killing your script, first, 
 Then, if you want your script to immediately return control to the shell, you may additionally call `unref` on the `instance` object in the callback:
 
 ```js
-var launcher = require('browser-launcher2');
+var launcher = require('james-browser-launcher');
 launcher( function (err, launch) {
 	launch( 'http://example.org/', {
 		browser: 'chrome',
@@ -136,7 +150,7 @@ launcher( function (err, launch) {
 ## API
 
 ``` js
-var launcher = require('browser-launcher2');
+var launcher = require('james-browser-launcher');
 ```
 
 ### `launcher([configPath], callback)`
@@ -202,7 +216,7 @@ Each browser contains following properties:
 
 ### `launcher.update([configFile], callback)`
 
-Updates the browsers cache file (`~/.config/browser-launcher/config.json` is no `configFile` was given) and creates new profiles for found browsers.
+Updates the browsers cache file (`~/.config/james-browser-launcher/config.json` is no `configFile` was given) and creates new profiles for found browsers.
 
 **Parameters:**
 - *String* `configFile` - path to the configuration file *Optional*
