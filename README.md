@@ -30,7 +30,7 @@ much-needed updates and fix some problems.
 
 ## Differences from *browser-launcher2*
 
-- This repositoy is not dead
+- This repository is not dead
 
 ## Supported browsers
 
