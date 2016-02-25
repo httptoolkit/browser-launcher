@@ -1,6 +1,6 @@
 {
-	"name": "browser-launcher2",
-	"version": "0.4.6",
+	"name": "james-browser-launcher",
+	"version": "1.0.0",
 	"description": "Detect, launch and stop browser versions",
 	"main": "index.js",
 	"scripts": {
@@ -22,9 +22,9 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/benderjs/browser-launcher2.git"
+		"url": "git://github.com/james-proxy/james-browser-launcher.git"
 	},
-	"homepage": "https://github.com/benderjs/browser-launcher2",
+	"homepage": "https://github.com/james-proxy/james-browser-launcher",
 	"keywords": [
 		"browser",
 		"headless",
@@ -40,7 +40,9 @@
 	],
 	"author": "James Halliday <mail@substack.net> (http://substack.net)",
 	"contributors": [
-		"CKSource (http://cksource.com/)"
+		"CKSource (http://cksource.com/)",
+		"benderjs",
+		"mitchhentges"
 	],
 	"license": "MIT",
 	"engine": {

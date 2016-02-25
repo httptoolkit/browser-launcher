@@ -1,6 +1,6 @@
-# browser-launcher2
+# james-browser-launcher
 
-[![Get it on npm](https://nodei.co/npm/browser-launcher2.png?compact=true)](https://www.npmjs.org/package/browser-launcher2)
+[![Get it on npm](https://nodei.co/npm/james-browser-launcher.png?compact=true)](https://www.npmjs.org/package/james-browser-launcher)
 
 Detect the browser versions available on your system and launch them in an
 isolated profile for automated testing purposes.
