@@ -1,6 +1,20 @@
 ## Upcoming Release
 
 #### Breaking changes
+- None yet
+
+#### User features
+- None yet
+ 
+#### Developer features
+- None yet
+
+#### Bugfixes
+- None yet
+
+## 1.1.0
+
+#### Breaking changes
 `stop` event is now emitted on process `close`, not process `exit` (so that stdout can be flushed first)
 
 #### User features
@@ -9,7 +23,7 @@
 - Detect `Chromium` on `OSX` (i: @rhendric, r: @mitchhentges)
 - `IE` will now response to `stop()` (i: @vsashidh, r: @mitchhentges)
 - Windows browser detection should be 2-4x faster (win-detect-browsers upgrade) (i: @mitchhentges, r: @tomitm)
- 
+
 #### Developer features
 - Updated dependencies (i: @mitchhentges, r: @tomitm)
 
