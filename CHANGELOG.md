@@ -8,9 +8,10 @@
 - Support launching `phantomjs` on `OSX` (i: @epmatsw, r: @mitchhentges)
 - Detect `Chromium` on `OSX` (i: @rhendric, r: @mitchhentges)
 - `IE` will now response to `stop()` (i: @vsashidh, r: @mitchhentges)
+- Windows browser detection should be 2-4x faster (win-detect-browsers upgrade) (i: @mitchhentges, r: @tomitm)
  
 #### Developer features
-- None yet
+- Updated dependencies (i: @mitchhentges, r: @tomitm)
 
 #### Bugfixes
 - Docs updated to describe how `james-browser-launcher` compares to other launchers (i: @mitchhentges, r: @tomitm)
