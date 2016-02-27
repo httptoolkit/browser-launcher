@@ -31,6 +31,7 @@ much-needed updates and fix some problems.
 ## Differences from *browser-launcher2*
 
 - This repository is not dead
+- See [`CHANGELOG.md`](CHANGELOG.md)
 
 ## Supported browsers
 
