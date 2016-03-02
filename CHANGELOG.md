@@ -5,13 +5,15 @@
 - The property "name" is more descriptive for variant channels, e.g. "chrome-canary"
 
 #### User features
-- None yet
- 
+- #19 Firefox Developer supported on OSX (i: @mitchhentges, r: @tomitm)
+- #18 Linux browser-finding faster, each command is run in parallel (i: @mitchhentges, r: @tomitm)
+
 #### Developer features
-- None yet
+- #19 Darwin detectors refactored, much easier to update (i: @mitchhentges, r: @tomitm)
+- #18 Browser list is refactored, adding commands for browsers is easier (i: @mitchhentges, r: @tomitm)
 
 #### Bugfixes
-- None yet
+- #18 If a browser appeared multiple times as a symlink, it would show up multiple times (i: @mitchhentges, r: @tomitm)
 
 ## 1.1.0
 
