@@ -1,6 +1,20 @@
 ## Upcoming Release
 
 #### Breaking changes
+- None yet
+
+#### User features
+- None yet
+
+#### Developer features
+- None yet
+
+#### Bugfixes
+- None yet
+
+## 1.2.0
+
+#### Breaking changes
 - Type `phantom` is now `phantomjs`, which is a little more consistent
 - The property "name" is more descriptive for variant channels, e.g. "chrome-canary"
 
