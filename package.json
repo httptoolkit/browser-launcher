@@ -17,7 +17,7 @@
     "mkdirp": "^0.5.0",
     "osenv": "^0.1.0",
     "plist": "^1.0.1",
-    "win-detect-browsers": "^2.1.0",
+    "win-detect-browsers": "1.0.2",
     "uid": "0.0.2",
     "rimraf": "~2.5.2"
   },
