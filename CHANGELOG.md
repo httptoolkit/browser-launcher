@@ -15,7 +15,7 @@
 ### 1.2.1
 
 #### Bugfixes
-- #21 `detect` works on OSX again
+- #21 `detect` works on OSX again (i: @mitchhentges, r: @tomitm)
 
 ## 1.2.0
 
