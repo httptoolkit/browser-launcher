@@ -12,6 +12,11 @@
 #### Bugfixes
 - None yet
 
+### 1.2.2
+
+#### Bugfixes
+- Downgraded `win-detect-browsers` for compatibility with `browserify`. See [#29](https://github.com/vweevers/win-detect-browsers/issues/29) (i: @mitchhentges, r: @tomitm)
+
 ### 1.2.1
 
 #### Bugfixes
