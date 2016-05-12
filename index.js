@@ -1,5 +1,5 @@
 var path = require( 'path' ),
-	pick = require( 'lodash/pick' ),
+	pick = require( 'lodash.pick' ),
 	configModule = require( './lib/config' ),
 	detect = require( './lib/detect' ),
 	run = require( './lib/run' ),
