@@ -12,6 +12,11 @@
 #### Bugfixes
 - None yet
 
+### 1.2.3
+
+#### Developer features
+- Reduce size of downloaded dependencies by using "chunks" of lodash (i: @mitchhentges, r: @tomitm)
+
 ### 1.2.2
 
 #### Bugfixes
