@@ -7,7 +7,7 @@
 - None yet
 
 #### Developer features
-- None yet
+- Ava updated to `0.15.0` (i: @mitchhentges)
 
 #### Bugfixes
 - None yet
