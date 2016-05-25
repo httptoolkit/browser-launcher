@@ -9,7 +9,7 @@ test('browser platforms without any variants', t => {
         firefox: {}
     });
 
-    t.same(browsers.browserPlatforms(), [{
+    t.deepEqual(browsers.browserPlatforms(), [{
         type: 'firefox',
         darwin: 'firefox',
         linux: ['firefox'],
@@ -27,7 +27,7 @@ test('browser platforms with multiple variants', t => {
         }
     });
 
-    t.same(browsers.browserPlatforms(), [{
+    t.deepEqual(browsers.browserPlatforms(), [{
         type: 'firefox',
         darwin: 'firefox',
         linux: ['firefox'],
@@ -49,7 +49,7 @@ test('browser platforms when command is different from variant name', t => {
         }
     });
 
-    t.same(browsers.browserPlatforms(), [{
+    t.deepEqual(browsers.browserPlatforms(), [{
         type: 'chrome',
         darwin: 'chrome',
         linux: ['google-chrome'],
@@ -66,7 +66,7 @@ test('browser platforms when multiple commands are possible for a variant', t =>
         }
     });
 
-    t.same(browsers.browserPlatforms(), [{
+    t.deepEqual(browsers.browserPlatforms(), [{
         type: 'chrome',
         darwin: 'chrome',
         linux: ['google-chrome', 'google-chrome-stable'],
@@ -84,7 +84,7 @@ test('browser config by type', t => {
         }
     });
 
-    t.same(browsers.typeConfig('firefox'), {
+    t.deepEqual(browsers.typeConfig('firefox'), {
         profile: false
     });
 });
@@ -98,7 +98,7 @@ test('browser config supports all options', t => {
         }
     });
 
-    t.same(browsers.typeConfig('chrome'), {
+    t.deepEqual(browsers.typeConfig('chrome'), {
         startupTime: 1000,
         nsaUplink: true,
         'john-cena': 'champ'
