@@ -8,6 +8,7 @@
 
 #### Developer features
 - Ava updated (i: @mitchhentges)
+- Add eslint, remove jshint/jscs, fix warnings (i: @mitchhentges, r: @tomitm)
 
 #### Bugfixes
 - Provide spawn error in callback (i: @mitchhentges, r: @tomitm)
