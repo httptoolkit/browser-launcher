@@ -4,13 +4,13 @@
 - None yet
 
 #### User features
-- None yet
+- Provide `skipDefaults` option to not use specified defaults (i: @mitchhentges, r: @tomitm)
 
 #### Developer features
 - Ava updated (i: @mitchhentges)
 
 #### Bugfixes
-- None yet
+- Provide spawn error in callback (i: @mitchhentges, r: @tomitm)
 
 ### 1.2.3
 
