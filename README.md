@@ -1,4 +1,4 @@
-# james-browser-launcher
+# james-browser-launcher [![Build Status](https://travis-ci.org/james-proxy/james-browser-launcher.svg?branch=master)](https://travis-ci.org/james-proxy/james-browser-launcher)
 
 [![Get it on npm](https://nodei.co/npm/james-browser-launcher.png?compact=true)](https://www.npmjs.org/package/james-browser-launcher)
 
