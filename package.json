@@ -4,7 +4,7 @@
   "description": "Detect, launch and stop browser versions",
   "main": "index.js",
   "scripts": {
-    "lint": "jscs . && jshint index.js lib/ example/",
+    "lint": "eslint ./example ./lib",
     "test": "ava"
   },
   "directories": {
@@ -53,13 +53,41 @@
   },
   "devDependencies": {
     "ava": "^0.16.0",
-    "jscs": "^3.0.3",
-    "jshint": "^2.5.2"
+    "eslint": "^3.2.2",
+    "eslint-config-airbnb-base": "5.0.1",
+    "eslint-plugin-import": "1.12.0"
   },
   "ava": {
     "failFast": true,
     "files": [
       "test/**/*.js"
     ]
+  },
+  "eslintConfig": {
+    "extends": "airbnb-base/legacy",
+    "rules": {
+      "no-console": 0,
+      "comma-dangle": 0,
+      "consistent-return": 0,
+      "func-names": 0,
+      "import/prefer-default-export": 0,
+      "linebreak-style": 0,
+      "max-len": [
+        "error",
+        120
+      ],
+      "no-continue": 0,
+      "no-param-reassign": 0,
+      "no-underscore-dangle": 0,
+      "quote-props": 0,
+      "valid-jsdoc": [
+        "error",
+        {
+          "requireReturn": false
+        }
+      ],
+      "vars-on-top": 0
+    },
+    "globals": {}
   }
 }
