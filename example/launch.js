@@ -1,23 +1,23 @@
-var launcher = require( '../' );
+var launcher = require('../');
 
-launcher( function( err, launch ) {
-	if ( err ) {
-		return console.error( err );
-	}
+launcher(function startBrowser(initErr, launch) {
+  if (initErr) {
+    return console.error(initErr);
+  }
 
-	launch( 'http://cksource.com/', process.env.BROWSER || 'chrome', function( err, instance ) {
-		if ( err ) {
-			return console.error( err );
-		}
+  launch('http://cksource.com/', process.env.BROWSER || 'chrome', function afterLaunch(launchErr, instance) {
+    if (launchErr) {
+      return console.error(launchErr);
+    }
 
-		console.log( 'Instance started with PID:', instance.pid );
+    console.log('Instance started with PID:', instance.pid);
 
-		setTimeout( function() {
-			instance.stop();
-		}, 10000 );
+    setTimeout(function stop() {
+      instance.stop();
+    }, 10000);
 
-		instance.on( 'stop', function( code ) {
-			console.log( 'Instance stopped with exit code:', code );
-		} );
-	} );
-} );
+    instance.on('stop', function logCode(code) {
+      console.log('Instance stopped with exit code:', code);
+    });
+  });
+});

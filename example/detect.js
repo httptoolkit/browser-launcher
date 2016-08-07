@@ -1,6 +1,6 @@
-var launcher = require( '../' );
+var launcher = require('../');
 
-launcher.detect( function( available ) {
-	console.log( 'Available browsers:' );
-	console.dir( available );
-} );
+launcher.detect(function logBrowsers(available) {
+  console.log('Available browsers:');
+  console.dir(available);
+});
