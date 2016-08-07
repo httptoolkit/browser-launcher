@@ -171,8 +171,9 @@ Open given URI in a browser and return an instance of it.
 - *Object|String* `options` - configuration options or name of a browser to launch
 - *String* `options.browser` - name of a browser to launch
 - *String* `options.version` - version of a browser to launch, if none was given, the highest available version will be launched
-- *Array* `options.options` - additional command line options
 - *String* `options.proxy` - URI of the proxy server
+- *Array* `options.options` - additional command line options
+- *Boolean* `options.skipDefaults` - don't supply any default options to browser
 - *Boolean* `options.detached` - if true, then killing your script will not kill the opened browser
 - *Boolean* `options.noProxy` - set proxy routes to skip over
 - *Boolean* `options.headless` - run a browser in a headless mode (only if **Xvfb** available)
