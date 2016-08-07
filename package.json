@@ -1,6 +1,6 @@
 {
   "name": "james-browser-launcher",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Detect, launch and stop browser versions",
   "main": "index.js",
   "scripts": {

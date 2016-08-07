@@ -4,6 +4,17 @@
 - None yet
 
 #### User features
+- None yet
+
+#### Developer features
+- None yet
+
+#### Bugfixes
+- None yet
+
+### 1.2.4
+
+#### User features
 - Provide `skipDefaults` option to not use specified defaults (i: @mitchhentges, r: @tomitm)
 
 #### Developer features
