@@ -54,7 +54,7 @@
   "devDependencies": {
     "ava": "^0.16.0",
     "eslint": "^3.2.2",
-    "eslint-config-airbnb-base": "5.0.2",
+    "eslint-config-airbnb-base": "5.0.3",
     "eslint-plugin-import": "1.14.0"
   },
   "ava": {
