@@ -12,6 +12,11 @@
 #### Bugfixes
 - None yet
 
+### 1.2.5
+
+#### Bugfixes
+- (Regression) wasn't refreshing browser cache on failed lookup (i: @mitchhentges, r: @tomitm)
+
 ### 1.2.4
 
 #### User features
