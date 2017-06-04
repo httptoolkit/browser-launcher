@@ -12,6 +12,11 @@
 #### Bugfixes
 - None yet
 
+### 1.2.8
+
+#### Bugfixes
+- Revert macOS browser changes due to browser-launch regression (i: @mitchhentges)
+
 ### 1.2.7
 
 #### Developer features
