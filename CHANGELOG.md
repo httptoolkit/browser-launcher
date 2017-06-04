@@ -12,6 +12,13 @@
 #### Bugfixes
 - None yet
 
+## 1.3.0
+Includes changes for @marcolofarias that allow browsers to be launched on macOS (again).
+Potential regressions that won't be tested until ~mid-June, but works on Mac, so probably a plus overall.
+
+#### Bugfixes
+- Launching browsers on macOS now works (i: @marcelofarias, r: @mitchhentges)
+
 ### 1.2.8
 
 #### Bugfixes
