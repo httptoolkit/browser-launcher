@@ -17,10 +17,8 @@
 #### Developer features
 - Resolves new ESLint error (i: @marcelofarias, r: @mitchhentges)
 
-#### 
-- Browsers now launch on macOS (i: @marcelofarias, r: @nerdbeere)
-
 #### Bugfixes
+- Browsers now launch on macOS (i: @marcelofarias, r: @nerdbeere)
 
 ### 1.2.6
 
