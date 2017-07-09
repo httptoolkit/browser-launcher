@@ -12,6 +12,14 @@
 #### Bugfixes
 - None yet
 
+### 1.3.1
+
+#### Bugfixes
+- Chromium now properly launches (i: @mitchhentges, r: @tomitm)
+
+#### Developer features
+- Updates dependencies: rimraf, eslint, ava (i: @mitchhentges, r: @tomitm)
+
 ## 1.3.0
 Includes changes for @marcolofarias that allow browsers to be launched on macOS (again).
 Potential regressions that won't be tested until ~mid-June, but works on Mac, so probably a plus overall.
