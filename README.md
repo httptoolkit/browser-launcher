@@ -93,10 +93,7 @@ Instance stopped with exit code: 0
 var launcher = require( 'james-browser-launcher' );
 
 launcher( function( err, launch ) {
-	if ( err ) {
-		return console.error( err );
-	}
-
+	// ...
 	launch(
 		'http://cksource.com/',
 		{
@@ -108,27 +105,12 @@ launcher( function( err, launch ) {
 			]
 		},
 		function( err, instance ) {
-			if ( err ) {
-				return console.error( err );
-			}
-
-			console.log( 'Instance started with PID:', instance.pid );
-
-			instance.on( 'stop', function( code ) {
-				console.log( 'Instance stopped with exit code:', code );
-			} );
+			// ...
 		}
 	);
 } );
 ```
 
-Outputs:
-
-```
-$ node example/launch.js
-Instance started with PID: 12345
-Instance stopped with exit code: 0
-```
 
 ### Browser detection
 ```js
