@@ -50,7 +50,7 @@ At the moment, `james-browser-launcher` supports following browsers on Windows, 
 ## Install
 
 ```
-npm install james-browser-launcher
+npm install @james-proxy/james-browser-launcher
 ```
 
 ## Example
