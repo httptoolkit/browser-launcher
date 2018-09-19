@@ -10,6 +10,7 @@
 - None yet
 
 #### Bugfixes
+- Removes quotes from Chrome proxy-bypass-list, adds quotes to FF no_proxies_on (#74) (i: @mitchhentges)
 - Use simple-plist to deal with binary plists (#76) (i: @nerdbeere, r: @mitchhentges)
 
 ### 1.3.1
