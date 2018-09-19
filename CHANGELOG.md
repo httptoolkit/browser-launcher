@@ -10,7 +10,7 @@
 - None yet
 
 #### Bugfixes
-- None yet
+- Use simple-plist to deal with binary plists (#76) (i: @nerdbeere, r: @mitchhentges)
 
 ### 1.3.1
 
