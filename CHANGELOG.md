@@ -7,7 +7,7 @@
 - None yet
 
 #### Developer features
-- None yet
+- Update dev dependencies (#79) (i: @mitchhentges, r: @nerdbeere)
 
 #### Bugfixes
 - None yet
