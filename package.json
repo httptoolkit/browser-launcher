@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint ./example ./lib",
+    "lint-fix": "npm run lint -- --fix",
     "test": "ava"
   },
   "directories": {
@@ -52,9 +53,9 @@
     "node": ">=0.8"
   },
   "devDependencies": {
-    "ava": "^0.20.0",
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb-base": "^11.2.0",
+    "ava": "^0.25.0",
+    "eslint": "^5.6.0",
+    "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.7.0"
   },
   "ava": {
