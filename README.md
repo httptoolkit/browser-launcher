@@ -1,6 +1,4 @@
-# james-browser-launcher [![Build Status](https://travis-ci.org/james-proxy/james-browser-launcher.svg?branch=master)](https://travis-ci.org/james-proxy/james-browser-launcher)
-
-[![Get it on npm](https://nodei.co/npm/james-browser-launcher.png?compact=true)](https://www.npmjs.org/package/james-browser-launcher)
+# james-browser-launcher [![Build Status](https://travis-ci.org/james-proxy/james-browser-launcher.svg?branch=master)](https://travis-ci.org/james-proxy/james-browser-launcher) [![Get it on npm](https://img.shields.io/npm/v/@james-proxy/james-browser-launcher.svg)](https://www.npmjs.com/package/@james-proxy/james-browser-launcher)
 
 Detect the browser versions available on your system and launch them in an
 isolated profile for automated testing purposes.
