@@ -203,6 +203,7 @@ Open given URI in a browser and return an instance of it.
 - *Boolean* `options.detached` - if true, then killing your script will not kill the opened browser
 - *Array|String* `options.noProxy` - An array of strings, containing proxy routes to skip over
 - *Boolean* `options.headless` - run a browser in a headless mode (only if **Xvfb** available)
+- *String* `options.profile` - path to a directory to use for the browser profile, overriding the default
 - *Function* `callback(err, instance)` - function fired when started a browser `instance` or an error occurred
 
 ### `launch.browsers`
