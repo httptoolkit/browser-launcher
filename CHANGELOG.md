@@ -12,6 +12,11 @@
 #### Bugfixes
 - None yet
 
+### 1.3.3
+
+#### User features
+- Browser profile directory can be configured ([`options.profile`](https://github.com/james-proxy/james-browser-launcher#launchuri-options-callback)) (#80) (i: @pimterry, r: @mitchhentges)
+
 ### 1.3.2
 
 #### User features

@@ -1,6 +1,6 @@
 {
   "name": "@james-proxy/james-browser-launcher",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Detect, launch and stop browser versions",
   "main": "index.js",
   "scripts": {
