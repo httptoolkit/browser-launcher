@@ -7,7 +7,7 @@
 - None yet
 
 #### Developer features
-- Update dev dependencies (#79) (i: @mitchhentges, r: @nerdbeere)
+- Updates "require(...)" references for new package namespace
 
 #### Bugfixes
 - None yet
@@ -16,6 +16,9 @@
 
 #### User features
 - Browser profile directory can be configured ([`options.profile`](https://github.com/james-proxy/james-browser-launcher#launchuri-options-callback)) (#80) (i: @pimterry, r: @mitchhentges)
+
+#### Developer features
+- Update dev dependencies (#79) (i: @mitchhentges, r: @nerdbeere
 
 ### 1.3.2
 

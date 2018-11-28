@@ -56,7 +56,7 @@ npm install @james-proxy/james-browser-launcher
 ### Browser launch
 
 ```js
-var launcher = require( 'james-browser-launcher' );
+var launcher = require( '@james-proxy/james-browser-launcher' );
 
 launcher( function( err, launch ) {
 	if ( err ) {
@@ -88,7 +88,7 @@ Instance stopped with exit code: 0
 ### Browser launch with options
 
 ```js
-var launcher = require( 'james-browser-launcher' );
+var launcher = require( '@james-proxy/james-browser-launcher' );
 
 launcher( function( err, launch ) {
 	// ...
@@ -154,7 +154,7 @@ If you want the opened browser to remain open after killing your script, first, 
 Then, if you want your script to immediately return control to the shell, you may additionally call `unref` on the `instance` object in the callback:
 
 ```js
-var launcher = require('james-browser-launcher');
+var launcher = require('@james-proxy/james-browser-launcher');
 launcher( function (err, launch) {
 	launch( 'http://example.org/', {
 		browser: 'chrome',
@@ -175,7 +175,7 @@ launcher( function (err, launch) {
 ## API
 
 ``` js
-var launcher = require('james-browser-launcher');
+var launcher = require('@james-proxy/james-browser-launcher');
 ```
 
 ### `launcher([configPath], callback)`
