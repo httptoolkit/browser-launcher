@@ -7,10 +7,18 @@
 - None yet
 
 #### Developer features
-- Updates "require(...)" references for new package namespace
+- None yet
 
 #### Bugfixes
 - None yet
+
+### 1.3.4
+
+#### User features
+- Adds firefox nightly to the list of detectable browsers (i: @pimterry, r: @mitchhentges)
+
+#### Developer features
+- Updates "require(...)" references for new package namespace
 
 ### 1.3.3
 
