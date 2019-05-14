@@ -5,8 +5,6 @@
   "main": "index.js",
   "types": "./types.d.ts",
   "scripts": {
-    "lint": "eslint ./example ./lib",
-    "lint-fix": "npm run lint -- --fix",
     "test": "ava"
   },
   "directories": {
@@ -54,42 +52,12 @@
     "node": ">=0.8"
   },
   "devDependencies": {
-    "ava": "^0.25.0",
-    "eslint": "^5.6.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.7.0"
+    "ava": "^0.25.0"
   },
   "ava": {
     "failFast": true,
     "files": [
       "test/**/*.js"
     ]
-  },
-  "eslintConfig": {
-    "extends": "airbnb-base/legacy",
-    "rules": {
-      "no-console": 0,
-      "comma-dangle": 0,
-      "consistent-return": 0,
-      "func-names": 0,
-      "linebreak-style": 0,
-      "max-len": [
-        "error",
-        120
-      ],
-      "no-continue": 0,
-      "no-param-reassign": 0,
-      "no-underscore-dangle": 0,
-      "no-plusplus": 0,
-      "quote-props": 0,
-      "valid-jsdoc": [
-        "error",
-        {
-          "requireReturn": false
-        }
-      ],
-      "vars-on-top": 0
-    },
-    "globals": {}
   }
 }
