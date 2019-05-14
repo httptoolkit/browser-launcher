@@ -15,7 +15,7 @@ This project is the latest in a long series, each forked from the last:
 * [browser-launcher2](https://github.com/benderjs/browser-launcher2).
 * [james-proxy/james-browser-launcher](https://github.com/james-proxy/james-browser-launcher)
 
-Each previous versions seems to now be maintained, and this is a core component of [HTTP Toolkit](https://httptoolkit.tech),
+Each previous versions seems to now be unmaintained, and this is a core component of [HTTP Toolkit](https://httptoolkit.tech),
 so it's been forked here to ensure it can continue healthy into the future.
 
 ## Supported browsers
