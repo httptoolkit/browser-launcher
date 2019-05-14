@@ -56,7 +56,7 @@ function getLauncher(configFile, callback) {
         if (!runner) {
             // update the list of available browsers and retry
             getLauncher.update(configFile, function (err, config) {
-                if (!( runner = run(config, name, version) )) {
+                if (!(runner = run(config, name, version))) {
                     return callback(name + ' is not installed in your system.');
                 }
 

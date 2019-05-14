@@ -32,7 +32,7 @@ test('browser platforms with multiple variants', t => {
         darwin: 'firefox',
         linux: ['firefox'],
         regex: undefined
-    },{
+    }, {
         type: 'firefox',
         darwin: 'firefox-developer',
         linux: ['firefox-developer'],
