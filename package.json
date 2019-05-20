@@ -5,6 +5,8 @@
   "main": "index.js",
   "types": "./types.d.ts",
   "scripts": {
+    "build": "tsc --noEmit ./types.d.ts",
+    "pretest": "npm run build",
     "test": "ava"
   },
   "directories": {
@@ -52,7 +54,9 @@
     "node": ">=0.8"
   },
   "devDependencies": {
-    "ava": "^0.25.0"
+    "@types/node": "^12.0.2",
+    "ava": "^0.25.0",
+    "typescript": "^3.4.5"
   },
   "ava": {
     "failFast": true,
