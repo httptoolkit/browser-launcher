@@ -23,7 +23,7 @@
     "rimraf": "^2.6.1",
     "simple-plist": "^1.0.0",
     "uid": "0.0.2",
-    "win-detect-browsers": "github:vweevers/win-detect-browsers#1e0502a"
+    "win-detect-browsers": "^4.0.0"
   },
   "repository": {
     "type": "git",
