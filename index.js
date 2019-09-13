@@ -20,7 +20,7 @@ function getLauncher(configFile, callback) {
 
     configModule.read(configFile, function (err, config) {
         if (!config) {
-            getLauncher.update(configFile, function (err, config) {
+            safeConfigUpdate(configFile, function (err, config) {
                 if (err) {
                     callback(err);
                 } else {
@@ -55,7 +55,7 @@ function getLauncher(configFile, callback) {
 
         if (!runner) {
             // update the list of available browsers and retry
-            getLauncher.update(configFile, function (err, config) {
+            safeConfigUpdate(configFile, function (err, config) {
                 if (!(runner = run(config, name, version))) {
                     return callback(name + ' is not installed in your system.');
                 }
@@ -81,7 +81,42 @@ getLauncher.detect = function (callback) {
 };
 
 /**
- * Update the browsers cache and create new profiles if necessary
+ * Detect the available browsers and build appropriate profiles if necessary
+ */
+function buildConfig(configDir, callback) {
+    detect(function (browsers) {
+        createProfiles(browsers, configDir, function (err) {
+            if (err) {
+                return callback(err);
+            }
+
+            callback(null, {
+                browsers: browsers
+            });
+        });
+    });
+}
+
+function safeConfigUpdate(configFile, callback) {
+    // Detect browssers etc, and try to update the config file, but return the
+    // detected config regardless of whether the config file actually works
+    buildConfig(path.dirname(configFile), (err, config) => {
+        if (err) {
+            return callback(err);
+        }
+
+        configModule.write(configFile, config, function (err) {
+            if (err) {
+                console.warn(err);
+            }
+            callback(null, config);
+        });
+    });
+}
+
+/**
+ * Detect the available browsers and build appropriate profiles if necessary,
+ * and update the config file with their details.
  * @param {String}   configFile Path to the configuration file
  * @param {Function} callback  Callback function
  */
@@ -91,23 +126,17 @@ getLauncher.update = function (configFile, callback) {
         configFile = configModule.defaultConfigFile;
     }
 
-    detect(function (browsers) {
-        createProfiles(browsers, path.dirname(configFile), function (err) {
+    buildConfig(path.dirname(configFile), (err, config) => {
+        if (err) {
+            return callback(err);
+        }
+
+        configModule.write(configFile, config, function (err) {
             if (err) {
-                return callback(err);
+                callback(err);
+            } else {
+                callback(null, config);
             }
-
-            var config = {
-                browsers: browsers
-            };
-
-            configModule.write(configFile, config, function (err) {
-                if (err) {
-                    callback(err);
-                } else {
-                    callback(null, config);
-                }
-            });
         });
     });
 };
