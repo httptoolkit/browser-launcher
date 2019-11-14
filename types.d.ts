@@ -2,57 +2,58 @@ import { ChildProcess } from 'child_process';
 import * as stream from "stream";
 
 declare namespace Launcher {
-	export function detect(callback: (browsers: Browser[]) => void): void;
+    export function detect(callback: (browsers: Browser[]) => void): void;
 
-	interface LaunchOptions {
-		browser: string;
+    interface LaunchOptions {
+        browser: string;
 
-		version?: string;
-		proxy?: string;
-		options?: string[];
-		skipDefaults?: boolean;
-		detached?: boolean;
-		noProxy?: string | string[];
-		headless?: boolean;
-		prefs?: { [key: string]: any };
-		profile?: string;
-	}
+        version?: string;
+        proxy?: string;
+        options?: string[];
+        skipDefaults?: boolean;
+        detached?: boolean;
+        noProxy?: string | string[];
+        headless?: boolean;
+        prefs?: { [key: string]: any };
+        profile?: string;
+    }
 
-	function Launch(
-		uri: string,
-		options: string | LaunchOptions,
-		callback: (error: Error | null, instance: Launcher.BrowserInstance
-	) => void): void;
+    function Launch(
+        uri: string,
+        options: string | LaunchOptions,
+        callback: (error: Error | null, instance: Launcher.BrowserInstance) => void
+    ): void;
 
-	export type Launch = typeof Launch;
+    export type Launch = typeof Launch;
 
-	namespace Launch {
-		export const browsers: Launcher.Browser[];
-	}
+    namespace Launch {
+        export const browsers: Launcher.Browser[];
+    }
 
-	export function update(callback: (error: Error | null, config: object) => void): void;
-	export function update(configFile: string, callback: (error: Error | null, config: object) => void): void;
+    export function update(callback: (error: Error | null, config: object) => void): void;
+    export function update(configFile: string, callback: (error: Error | null, config: object) => void): void;
 
-	export interface Browser {
-		name: string;
-		version: string;
-		type: string;
-		command: string;
-	}
+    export interface Browser {
+        name: string;
+        version: string;
+        type: string;
+        command: string;
+        profile: string | boolean;
+    }
 
-	export interface BrowserInstance {
-		command: string;
-		args: string[];
-		image: string;
-		processName: string;
-		pid: number;
+    export interface BrowserInstance {
+        command: string;
+        args: string[];
+        image: string;
+        processName: string;
+        pid: number;
 
-		process: ChildProcess;
-		stderr: stream.Readable;
-		stdout: stream.Readable;
+        process: ChildProcess;
+        stderr: stream.Readable;
+        stdout: stream.Readable;
 
-		stop(): void;
-	}
+        stop(): void;
+    }
 }
 
 declare function Launcher(configPath: string, callback: (error: Error | null, launch: typeof Launcher.Launch) => void): void;
