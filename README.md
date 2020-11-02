@@ -28,7 +28,7 @@ At the moment, `browser-launcher` supports following browsers on Windows, Unix a
 - Chromium
 - Firefox
 - IE (Windows only)
-- Chromium-based Edge (Windows & Mac only)
+- Chromium-based Edge
 - Brave (Experimental)
 - Opera
 - Safari
