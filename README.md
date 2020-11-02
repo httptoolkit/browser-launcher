@@ -1,4 +1,4 @@
-# browser-launcher [![Build Status](https://travis-ci.org/httptoolkit/browser-launcher.svg?branch=master)](https://travis-ci.org/httptoolkit/browser-launcher) [![Get it on npm](https://img.shields.io/npm/v/@httptoolkit/browser-launcher.svg)](https://www.npmjs.com/package/@httptoolkit/browser-launcher)
+# browser-launcher[![Build Status](https://github.com/httptoolkit/browser-launcher/workflows/CI/badge.svg)](https://github.com/httptoolkit/browser-launcher/actions) [![Get it on npm](https://img.shields.io/npm/v/@httptoolkit/browser-launcher.svg)](https://www.npmjs.com/package/@httptoolkit/browser-launcher)
 
 > _Part of [HTTP Toolkit](https://httptoolkit.tech): powerful tools for building, testing & debugging HTTP(S)_
 
