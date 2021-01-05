@@ -15,7 +15,7 @@ declare namespace Launcher {
         noProxy?: string | string[];
         headless?: boolean;
         prefs?: { [key: string]: any };
-        profile?: string;
+        profile?: string | null;
     }
 
     function Launch(
