@@ -16,9 +16,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - if: matrix.node-version == '6.x'
-        run: npm install
-      - if: matrix.node-version != '6.x'
-        run: npm ci
+      - run: npm install
 
       - run: npm test
