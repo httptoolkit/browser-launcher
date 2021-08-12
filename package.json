@@ -1,6 +1,6 @@
 {
   "name": "@httptoolkit/browser-launcher",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Detect, launch and stop browser versions",
   "main": "index.js",
   "types": "./types.d.ts",
