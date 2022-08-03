@@ -24,7 +24,7 @@
     "rimraf": "^2.6.1",
     "simple-plist": "^1.0.0",
     "uid": "^2.0.0",
-    "win-detect-browsers": "^6.0.0"
+    "win-detect-browsers": "^7.0.0"
   },
   "repository": {
     "type": "git",
