@@ -1,9 +1,8 @@
 # browser-launcher[![Build Status](https://github.com/httptoolkit/browser-launcher/workflows/CI/badge.svg)](https://github.com/httptoolkit/browser-launcher/actions) [![Get it on npm](https://img.shields.io/npm/v/@httptoolkit/browser-launcher.svg)](https://www.npmjs.com/package/@httptoolkit/browser-launcher)
 
-> _Part of [HTTP Toolkit](https://httptoolkit.tech): powerful tools for building, testing & debugging HTTP(S)_
+> _Part of [HTTP Toolkit](https://httptoolkit.com): powerful tools for building, testing & debugging HTTP(S)_
 
-Detect the browser versions available on your system and launch them in an
-isolated profile for automation & testing purposes.
+Detect the browser versions available on your system and launch them in an isolated profile for automation & testing purposes.
 
 You can launch browsers headlessly
 (using [Xvfb](http://en.wikipedia.org/wiki/Xvfb) or with [PhantomJS](http://phantomjs.org/)) and set the proxy
@@ -15,8 +14,7 @@ This project is the latest in a long series, each forked from the last:
 * [browser-launcher2](https://github.com/benderjs/browser-launcher2).
 * [james-proxy/james-browser-launcher](https://github.com/james-proxy/james-browser-launcher)
 
-Each previous versions seems to now be unmaintained, and this is a core component of [HTTP Toolkit](https://httptoolkit.tech),
-so it's been forked here to ensure it can continue healthy into the future.
+Each previous versions seems to now be unmaintained, and this is a core component of [HTTP Toolkit](https://httptoolkit.com), so it's been forked here to ensure it can continue healthy into the future.
 
 ## Supported browsers
 
@@ -29,7 +27,7 @@ At the moment, `browser-launcher` supports following browsers on Windows, Unix a
 - Firefox
 - IE (Windows only)
 - Chromium-based Edge
-- Brave (Experimental)
+- Brave
 - Opera
 - Safari
 - PhantomJS
@@ -52,7 +50,7 @@ launcher(function(err, launch) {
 		return console.error(err);
 	}
 
-	launch('http://cksource.com/', 'chrome', function(err, instance) {
+	launch('http://httptoolkit.com/', 'chrome', function(err, instance) {
 		if (err) {
 			return console.error(err);
 		}
@@ -82,7 +80,7 @@ var launcher = require('@httptoolkit/browser-launcher');
 launcher(function(err, launch) {
 	// ...
 	launch(
-		'http://cksource.com/',
+		'http://httptoolkit.com/',
 		{
 			browser: 'chrome',
 			noProxy: [ '127.0.0.1', 'localhost' ],
@@ -101,7 +99,7 @@ launcher(function(err, launch) {
 
 ### Browser detection
 ```js
-var launcher = require('../');
+var launcher = require('@httptoolkit/browser-launcher');
 
 launcher.detect(function(available) {
 	console.log('Available browsers:');
