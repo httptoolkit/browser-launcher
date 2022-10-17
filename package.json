@@ -44,8 +44,9 @@
     "osx",
     "windows"
   ],
-  "author": "James Halliday <mail@substack.net> (http://substack.net)",
+  "author": "Tim Perry <tim@httptoolkit.com>",
   "contributors": [
+    "James Halliday <mail@substack.net> (http://substack.net)",
     "CKSource (http://cksource.com/)",
     "benderjs",
     "mitchhentges"
