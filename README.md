@@ -32,7 +32,28 @@ At the moment, `browser-launcher` supports following browsers on Windows, Unix a
 - Safari
 - PhantomJS
 
-## Install
+## Setup
+
+### Quick usage
+
+```bash
+> npx @httptoolkit/browser-launcher # Scans for browsers
+[
+    {
+        "name": "chrome",
+        "version": "...",
+        # ...
+    },
+    # ...
+]
+
+> npx @httptoolkit/browser-launcher firefox # Launches a browser
+firefox launched with PID: XXXXXX
+```
+
+If the package is already installed locally, you can use `browser-launcher` to launch it directly instead, either from the `node_modules/.bin` directly, or as binary name with `npx`.
+
+### Install
 
 ```
 npm install @httptoolkit/browser-launcher
