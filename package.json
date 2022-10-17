@@ -4,6 +4,9 @@
   "description": "Detect, launch and stop browser versions",
   "main": "index.js",
   "types": "./types.d.ts",
+  "bin": {
+    "browser-launcher": "./bin.js"
+  },
   "scripts": {
     "build": "tsc --noEmit ./types.d.ts",
     "pretest": "npm run build",
