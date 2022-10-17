@@ -29,8 +29,9 @@ At the moment, `browser-launcher` supports following browsers on Windows, Unix a
 - Chromium-based Edge
 - Brave
 - Opera
-- Safari
+- Safari (Mac only)
 - PhantomJS
+- Arc (experimental, Mac only)
 
 ## Setup
 
