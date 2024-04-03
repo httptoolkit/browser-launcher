@@ -19,9 +19,7 @@
   "dependencies": {
     "@httptoolkit/osx-find-executable": "^2.0.1",
     "headless": "^1.0.0",
-    "lodash.assign": "^4.0.9",
-    "lodash.omit": "^4.3.0",
-    "lodash.pick": "^4.2.1",
+    "lodash": "^4.17.21",
     "mkdirp": "^0.5.0",
     "osenv": "^0.1.0",
     "rimraf": "^2.6.1",
