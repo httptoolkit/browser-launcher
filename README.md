@@ -212,7 +212,7 @@ Open given URI in a browser and return an instance of it.
 - *Boolean* `options.detached` - if true, then killing your script will not kill the opened browser
 - *Array|String* `options.noProxy` - An array of strings, containing proxy routes to skip over
 - *Boolean* `options.headless` - run a browser in a headless mode (only if **Xvfb** available)
-- *String|null* `options.profile` - path to a directory to use for the browser profile, overriding the default. Null to force use of the default system profile (Chromium-based browsers only).
+- *String|null* `options.profile` - path to a directory to use for the browser profile, overriding the default. Use `null` to force use of the default system profile (supported for Firefox & Chromium-based browsers only). Note that configuration options like `proxy` & `prefs` can't be used in Firefox with the default system profile.
 - *Function* `callback(err, instance)` - function fired when started a browser `instance` or an error occurred
 
 ### `launch.browsers`
