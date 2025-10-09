@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import * as os from 'os';
 import * as path from 'path';
 import packageJson from '../package.json' with { type: 'json' };
@@ -9,81 +9,50 @@ interface Config {
     browsers: any[];
 }
 
-type ReadCallback = (err: Error | null, data?: Config | null, configDir?: string) => void;
-type WriteCallback = (err?: Error | null) => void;
+interface ReadResult {
+    data: Config | null;
+    configDir: string;
+}
 
 /**
  * Read a configuration file
  */
-function read(callback: ReadCallback): void;
-function read(configFile: string, callback: ReadCallback): void;
-function read(configFileOrCallback: string | ReadCallback, callback?: ReadCallback): void {
-    let configFile: string;
-    let cb: ReadCallback;
-
-    if (typeof configFileOrCallback === 'function') {
-        cb = configFileOrCallback;
-        configFile = defaultConfigFile;
-    } else {
-        configFile = configFileOrCallback || defaultConfigFile;
-        cb = callback!;
-    }
-
+async function read(configFile: string = defaultConfigFile): Promise<ReadResult> {
     const configDir = path.dirname(configFile);
 
-    fs.mkdir(configDir, { recursive: true }, (mkdirErr) => {
-        if (mkdirErr) {
-            return cb(mkdirErr);
+    await fs.mkdir(configDir, { recursive: true });
+
+    try {
+        const src = await fs.readFile(configFile, 'utf-8');
+        const data: Config = JSON.parse(src);
+        return { data, configDir };
+    } catch (err: any) {
+        if (err.code === 'ENOENT') {
+            return { data: null, configDir };
         }
-
-        fs.exists(configFile, (exists) => {
-            if (exists) {
-                fs.readFile(configFile, (readErr, src) => {
-                    if (readErr) return cb(readErr);
-
-                    let data: Config;
-                    try {
-                        data = JSON.parse(src.toString());
-                    } catch (e) {
-                        return cb(e as Error);
-                    }
-
-                    cb(null, data, configDir);
-                });
-            } else {
-                cb(null, null, configDir);
-            }
-        });
-    });
+        throw err;
+    }
 }
 
 /**
  * Write a configuration file
  */
-function write(config: Config, callback?: WriteCallback): void;
-function write(configFile: string, config: Config, callback?: WriteCallback): void;
-function write(configFileOrConfig: string | Config, configOrCallback?: Config | WriteCallback, callback?: WriteCallback): void {
+async function write(configFile: string, config: Config): Promise<void>;
+async function write(config: Config): Promise<void>;
+async function write(configFileOrConfig: string | Config, config?: Config): Promise<void> {
     let configFile: string;
-    let config: Config;
-    let cb: WriteCallback;
+    let configData: Config;
 
     if (typeof configFileOrConfig === 'object') {
         configFile = defaultConfigFile;
-        config = configFileOrConfig;
-        cb = (configOrCallback as WriteCallback) || (() => {});
+        configData = configFileOrConfig;
     } else {
         configFile = configFileOrConfig;
-        config = configOrCallback as Config;
-        cb = callback || (() => {});
+        configData = config!;
     }
 
-    fs.mkdir(path.dirname(configFile), { recursive: true }, (err) => {
-        if (err) {
-            return cb(err);
-        }
-
-        fs.writeFile(configFile, JSON.stringify(config, null, 2), cb);
-    });
+    await fs.mkdir(path.dirname(configFile), { recursive: true });
+    await fs.writeFile(configFile, JSON.stringify(configData, null, 2));
 }
 
 export { defaultConfigFile, read, write };

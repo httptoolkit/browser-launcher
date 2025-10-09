@@ -15,184 +15,180 @@ interface DetectedBrowser {
     [key: string]: any;
 }
 
-type DetectCallback = (browsers: DetectedBrowser[]) => void;
-type BrowserCheckCallback = (err: Error | string | null, version?: string, path?: string) => void;
-
 /**
  * Detect all available browsers on Windows systems.
- * Pass an array of detected browsers to the callback function when done.
+ * Returns an array of detected browsers.
  */
-function detectWindows(callback: (err: Error | null, browsers?: DetectedBrowser[]) => void): void {
-    winDetect((error: Error | null, found: any[]) => {
-        if (error) return callback(error);
+async function detectWindows(): Promise<DetectedBrowser[]> {
+    return new Promise((resolve, reject) => {
+        winDetect((error: Error | null, found: any[]) => {
+            if (error) return reject(error);
 
-        const available = found.map((browser) => {
-            const config = browsers.typeConfig(browser.name);
+            const available = found.map((browser) => {
+                const config = browsers.typeConfig(browser.name);
 
-            let configName: string;
-            if (browser.channel && browser.channel !== "stable" && browser.channel !== "release") {
-                configName = `${browser.name}-${browser.channel}`;
-            } else {
-                configName = browser.name;
-            }
+                let configName: string;
+                if (browser.channel && browser.channel !== "stable" && browser.channel !== "release") {
+                    configName = `${browser.name}-${browser.channel}`;
+                } else {
+                    configName = browser.name;
+                }
 
-            return assign({
-                type: browser.name,
-                name: configName,
-                command: browser.path,
-                version: browser.version
-            }, config);
+                return assign({
+                    type: browser.name,
+                    name: configName,
+                    command: browser.path,
+                    version: browser.version
+                }, config);
+            });
+
+            resolve(available);
         });
-
-        callback(null, available);
     });
 }
 
 /**
  * Check if the given browser is available (on OSX systems).
- * Pass its version and path to the callback function if found.
+ * Returns the version and path if found.
  */
-function checkDarwin(name: string, callback: BrowserCheckCallback): void {
-    darwinBrowsers[name].version((versionErr: Error | string | null, version?: string) => {
-        if (versionErr) {
-            return callback('failed to get version for ' + name);
-        }
-
-        darwinBrowsers[name].path((pathErr: Error | string | null, path?: string) => {
-            if (pathErr) {
-                return callback('failed to get path for ' + name);
-            }
-
-            callback(null, version, path);
-        });
-    });
+async function checkDarwin(name: string): Promise<{ version: string; path: string }> {
+    try {
+        const version = await darwinBrowsers[name].version();
+        const path = await darwinBrowsers[name].path();
+        return { version, path };
+    } catch (err) {
+        throw new Error('failed to get version or path for ' + name);
+    }
 }
 
 /**
  * Attempt to run browser (on Unix systems) to determine version.
- * If found, the version is provided to the callback
+ * Returns the version if found.
  */
-function getCommandVersion(name: string, regex: RegExp, callback: (err: Error | string | null, version?: string) => void): void {
-    let childProcess;
-    try {
-        childProcess = spawn(name, ['--version']);
-    } catch (e) {
-        callback(e as Error);
-        return;
-    }
-
-    let data = '';
-
-    childProcess.stdout.on('data', (buf) => {
-        data += buf;
-    });
-
-    let callbackCalled = false;
-    childProcess.on('error', () => {
-        if (!callbackCalled) {
-            callbackCalled = true;
-            callback('not installed');
-        }
-    });
-
-    childProcess.on('close', (code) => {
-        if (callbackCalled) {
+async function getCommandVersion(name: string, regex: RegExp): Promise<string> {
+    return new Promise((resolve, reject) => {
+        let childProcess;
+        try {
+            childProcess = spawn(name, ['--version']);
+        } catch (e) {
+            reject(e as Error);
             return;
         }
 
-        if (code !== 0) {
-            return callback('not installed');
-        }
+        let data = '';
 
-        const match = regex.exec(data);
-        const version = match ? match[1] : data.trim();
-        callback(null, version);
+        childProcess.stdout.on('data', (buf) => {
+            data += buf;
+        });
+
+        let resolved = false;
+        childProcess.on('error', () => {
+            if (!resolved) {
+                resolved = true;
+                reject(new Error('not installed'));
+            }
+        });
+
+        childProcess.on('close', (code) => {
+            if (resolved) {
+                return;
+            }
+
+            if (code !== 0) {
+                reject(new Error('not installed'));
+                return;
+            }
+
+            const match = regex.exec(data);
+            const version = match ? match[1] : data.trim();
+            resolve(version);
+        });
     });
 }
 
 /**
  * Check if the given browser is available (on Unix systems).
- * Pass its version and command to the callback function if found.
+ * Returns the version and command if found.
  */
-function checkUnix(commands: string[], regex: RegExp, callback: BrowserCheckCallback): void {
-    let checkCount = 0;
-    let detectedVersion: string | undefined;
+async function checkUnix(commands: string[], regex: RegExp): Promise<{ version: string; command: string }> {
+    /*
+         There could be multiple commands per browser on Linux. We try all of them and return
+         the last successful match (to handle symlinking or multiple installation paths).
+         */
+    const results = await Promise.allSettled(
+        commands.map(async (command) => ({
+            version: await getCommandVersion(command, regex),
+            command
+        }))
+    );
 
-    commands.forEach((command) => {
-        /*
-             There could be multiple commands run per browser on Linux, and we can't call the callback on _every_
-             successful command invocation, because then it will be called more than `browserPlatforms.length` times.
+    // Find the last successful result
+    for (let i = results.length - 1; i >= 0; i--) {
+        if (results[i].status === 'fulfilled') {
+            return (results[i] as PromiseFulfilledResult<{ version: string; command: string }>).value;
+        }
+    }
 
-             This callback function performs debouncing, and also takes care of the case when the same browser matches
-             multiple commands (due to symlinking or whatnot). Only the last _successful_ "check" will be saved and
-             passed on
-             */
-        getCommandVersion(command, regex, (err, version) => {
-            checkCount++;
-            if (!err) {
-                detectedVersion = version;
-            }
-
-            if (checkCount === commands.length) {
-                callback(!detectedVersion ? 'Browser not found' : null, detectedVersion, command);
-            }
-        });
-    });
+    throw new Error('Browser not found');
 }
 
 /**
  * Detect all available web browsers.
- * Pass an array of available browsers to the callback function when done.
+ * Returns an array of available browsers.
  */
-function detect(callback: DetectCallback): void {
+async function detect(): Promise<DetectedBrowser[]> {
     if (process.platform === 'win32') {
-        detectWindows((err, foundBrowsers) => {
-            if (err) callback([]);
-            else callback(foundBrowsers!);
-        });
-        return;
+        try {
+            return await detectWindows();
+        } catch {
+            return [];
+        }
     }
 
-    const available: DetectedBrowser[] = [];
-    let detectAttempts = 0;
     const browserPlatforms = browsers.browserPlatforms();
 
-    browserPlatforms.forEach((browserPlatform) => {
-        function browserDone(err: Error | string | null, version?: string, path?: string) {
-            detectAttempts++;
-            if (!err && version && path) {
-                const config = browsers.typeConfig(browserPlatform.type);
-                available.push(assign({}, config, {
-                    type: browserPlatform.type,
-                    name: browserPlatform.darwin || browserPlatform.type,
-                    command: path,
-                    version: version
-                }) as DetectedBrowser);
-            }
+    const results = await Promise.allSettled(
+        browserPlatforms.map(async (browserPlatform) => {
+            let version: string;
+            let command: string;
 
-            if (detectAttempts === browserPlatforms.length) {
-                callback(available);
-            }
-        }
-
-        if (process.platform === 'darwin') {
-            if (browserPlatform.darwin && darwinBrowsers[browserPlatform.darwin]) {
-                // If we have a darwin-specific bundle id to search for, use it:
-                checkDarwin(browserPlatform.darwin, browserDone);
-            } else if (browserPlatform.darwin && browserPlatform.linux) {
-                // If it's darwin-supported, but with no bundle id, search $PATH
-                // as we do on linux:
-                checkUnix(browserPlatform.linux, browserPlatform.regex!, browserDone);
+            if (process.platform === 'darwin') {
+                if (browserPlatform.darwin && darwinBrowsers[browserPlatform.darwin]) {
+                    // If we have a darwin-specific bundle id to search for, use it:
+                    const result = await checkDarwin(browserPlatform.darwin);
+                    version = result.version;
+                    command = result.path;
+                } else if (browserPlatform.darwin && browserPlatform.linux) {
+                    // If it's darwin-supported, but with no bundle id, search $PATH
+                    // as we do on linux:
+                    const result = await checkUnix(browserPlatform.linux, browserPlatform.regex!);
+                    version = result.version;
+                    command = result.command;
+                } else {
+                    throw new Error('Not supported');
+                }
+            } else if (browserPlatform.linux) {
+                // On Linux, for supported browsers, we always just search $PATH:
+                const result = await checkUnix(browserPlatform.linux, browserPlatform.regex!);
+                version = result.version;
+                command = result.command;
             } else {
-                browserDone(new Error('Not supported') as any);
+                throw new Error('Not supported');
             }
-        } else if (browserPlatform.linux) {
-            // On Linux, for supported browsers, we always just search $PATH:
-            checkUnix(browserPlatform.linux, browserPlatform.regex!, browserDone);
-        } else {
-            browserDone(new Error('Not supported') as any);
-        }
-    });
+
+            const config = browsers.typeConfig(browserPlatform.type);
+            return assign({}, config, {
+                type: browserPlatform.type,
+                name: browserPlatform.darwin || browserPlatform.type,
+                command: command,
+                version: version
+            }) as DetectedBrowser;
+        })
+    );
+
+    return results
+        .filter((result): result is PromiseFulfilledResult<DetectedBrowser> => result.status === 'fulfilled')
+        .map(result => result.value);
 }
 
 export { detect };

@@ -65,24 +65,16 @@ npm install @httptoolkit/browser-launcher
 ### Browser launch
 
 ```js
-const launcher = require('@httptoolkit/browser-launcher');
+import { getLauncher } from '@httptoolkit/browser-launcher';
 
-launcher(function(err, launch) {
-	if (err) {
-		return console.error(err);
-	}
+const launch = await getLauncher();
 
-	launch('http://httptoolkit.com/', 'chrome', function(err, instance) {
-		if (err) {
-			return console.error(err);
-		}
+const instance = await launch('http://httptoolkit.com/', 'chrome');
 
-		console.log('Instance started with PID:', instance.pid);
+console.log('Instance started with PID:', instance.pid);
 
-		instance.on('stop', function(code) {
-			console.log('Instance stopped with exit code:', code);
-		});
-	});
+instance.on('stop', function(code) {
+	console.log('Instance stopped with exit code:', code);
 });
 ```
 
@@ -97,36 +89,33 @@ Instance stopped with exit code: 0
 ### Browser launch with options
 
 ```js
-var launcher = require('@httptoolkit/browser-launcher');
+import { getLauncher } from '@httptoolkit/browser-launcher';
 
-launcher(function(err, launch) {
-	// ...
-	launch(
-		'http://httptoolkit.com/',
-		{
-			browser: 'chrome',
-			noProxy: [ '127.0.0.1', 'localhost' ],
-			options: [
-				'--disable-web-security',
-				'--disable-extensions'
-			]
-		},
-		function(err, instance) {
-			// ...
-		}
-	);
-});
+const launch = await getLauncher();
+
+const instance = await launch(
+	'http://httptoolkit.com/',
+	{
+		browser: 'chrome',
+		noProxy: [ '127.0.0.1', 'localhost' ],
+		options: [
+			'--disable-web-security',
+			'--disable-extensions'
+		]
+	}
+);
+
+console.log('Instance started with PID:', instance.pid);
 ```
 
 
 ### Browser detection
 ```js
-var launcher = require('@httptoolkit/browser-launcher');
+import { detectBrowsers } from '@httptoolkit/browser-launcher';
 
-launcher.detect(function(available) {
-	console.log('Available browsers:');
-	console.dir(available);
-});
+const available = await detectBrowsers();
+console.log('Available browsers:');
+console.dir(available);
 ```
 
 Outputs:
@@ -160,43 +149,41 @@ Available browsers:
 
 If you want the opened browser to remain open after killing your script, first, you need to set `options.detached` to `true` (see the API). By default, killing your script will kill the opened browsers.
 
-Then, if you want your script to immediately return control to the shell, you may additionally call `unref` on the `instance` object in the callback:
+Then, if you want your script to immediately return control to the shell, you may additionally call `unref` on the `instance` object:
 
 ```js
-var launcher = require('@httptoolkit/browser-launcher');
-launcher(function (err, launch) {
-	launch('http://example.org/', {
-		browser: 'chrome',
-		detached: true
-    }, function(err, instance) {
-		if (err) {
-			return console.error(err);
-		}
+import { getLauncher } from '@httptoolkit/browser-launcher';
 
-		instance.process.unref();
-		instance.process.stdin.unref();
-		instance.process.stdout.unref();
-		instance.process.stderr.unref();
-	});
+const launch = await getLauncher();
+
+const instance = await launch('http://example.org/', {
+	browser: 'chrome',
+	detached: true
 });
+
+instance.process.unref();
+instance.process.stdin.unref();
+instance.process.stdout.unref();
+instance.process.stderr.unref();
 ```
 
 ## API
 
 ``` js
-var launcher = require('@httptoolkit/browser-launcher');
+import { getLauncher, detectBrowsers, updateBrowsers } from '@httptoolkit/browser-launcher';
 ```
 
-### `launcher([configPath], callback)`
+### `getLauncher([configPath])`
 
-Detect available browsers and pass `launch` function to the callback.
+Detect available browsers and return a `launch` function.
 
 **Parameters:**
 
 - *String* `configPath` - path to a browser configuration file *(Optional)*
-- *Function* `callback(err, launch)` - function called with `launch` function and errors (if any)
 
-### `launch(uri, options, callback)`
+**Returns:** `Promise<LaunchFunction>` - resolves with the `launch` function
+
+### `launch(uri, options)`
 
 Open given URI in a browser and return an instance of it.
 
@@ -213,7 +200,8 @@ Open given URI in a browser and return an instance of it.
 - *Array|String* `options.noProxy` - An array of strings, containing proxy routes to skip over
 - *Boolean* `options.headless` - run a browser in a headless mode (only if **Xvfb** available)
 - *String|null* `options.profile` - path to a directory to use for the browser profile, overriding the default. Use `null` to force use of the default system profile (supported for Firefox & Chromium-based browsers only). Note that configuration options like `proxy` & `prefs` can't be used in Firefox with the default system profile.
-- *Function* `callback(err, instance)` - function fired when started a browser `instance` or an error occurred
+
+**Returns:** `Promise<Instance>` - resolves with the browser instance
 
 ### `launch.browsers`
 
@@ -239,12 +227,11 @@ Browser instance object.
 **Methods:**
 - `stop(callback)` - stop the instance and fire the callback once stopped
 
-### `launcher.detect(callback)`
+### `detectBrowsers()`
 
 Detects all browsers available.
 
-**Parameters:**
-- *Function* `callback(available)` - function called with array of all recognized browsers
+**Returns:** `Promise<Browser[]>` - resolves with an array of all recognized browsers
 
 Each browser contains following properties:
 - `name` - name of a browser
@@ -252,13 +239,14 @@ Each browser contains following properties:
 - `type` - type of a browser i.e. browser's family
 - `command` - command used to launch a browser
 
-### `launcher.update([configFile], callback)`
+### `updateBrowsers([configFile])`
 
-Updates the browsers cache file (`~/.config/browser-launcher/config.json` is no `configFile` was given) and creates new profiles for found browsers.
+Updates the browsers cache file (`~/.config/browser-launcher/config.json` if no `configFile` was given) and creates new profiles for found browsers.
 
 **Parameters:**
-- *String* `configFile` - path to the configuration file *Optional*
-- *Function* `callback(err, browsers)` - function called with found browsers and errors (if any)
+- *String* `configFile` - path to the configuration file *(Optional)*
+
+**Returns:** `Promise<Config>` - resolves with the configuration containing found browsers
 
 ## Known Issues
 

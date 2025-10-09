@@ -1,14 +1,14 @@
 import * as util from './util.js';
 
 interface DarwinBrowser {
-    path: (callback: (err: Error | string | null, path?: string) => void) => void;
-    version: (callback: (err: Error | string | null, version?: string) => void) => void;
+    path: () => Promise<string>;
+    version: () => Promise<string>;
 }
 
 function browser(id: string, versionKey: string): DarwinBrowser {
     return {
-        path: util.find.bind(null, id),
-        version: util.getInfoKey.bind(null, id, versionKey)
+        path: () => util.find(id),
+        version: () => util.getInfoKey(id, versionKey)
     };
 }
 

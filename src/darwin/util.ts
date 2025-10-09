@@ -1,56 +1,48 @@
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import * as path from 'path';
 import plist from 'simple-plist';
 import { findExecutableById } from '@httptoolkit/osx-find-executable';
 
 const infoCache: { [file: string]: any } = Object.create(null);
 
-function parse(file: string, callback: (err: string | null, data: any) => void): void {
+async function parse(file: string): Promise<any> {
     if (infoCache[file]) {
-        return callback(null, infoCache[file]);
+        return infoCache[file];
     }
 
-    fs.exists(file, (exists) => {
-        if (!exists) {
-            return callback('cannot parse non-existent plist', null);
-        }
+    try {
+        await fs.access(file);
+    } catch {
+        throw new Error('cannot parse non-existent plist');
+    }
 
+    return new Promise((resolve, reject) => {
         plist.readFile(file, (err: Error | null, data: any) => {
-            infoCache[file] = data;
-            callback(err ? err.message : null, data);
+            if (err) {
+                reject(err);
+            } else {
+                infoCache[file] = data;
+                resolve(data);
+            }
         });
     });
 }
 
-function findBundle(bundleId: string, callback: (err: Error | null | string, bundlePath?: string) => void): void {
-    findExecutableById(bundleId).then((execPath) => {
-        callback(
-            null,
-            // Executable is always ${bundle}/Contents/MacOS/${execName},
-            // so we just need to strip the last few levels:
-            path.dirname(path.dirname(path.dirname(execPath)))
-        );
-    }).catch((err) => callback(err));
+async function findBundle(bundleId: string): Promise<string> {
+    const execPath = await findExecutableById(bundleId);
+    // Executable is always ${bundle}/Contents/MacOS/${execName},
+    // so we just need to strip the last few levels:
+    return path.dirname(path.dirname(path.dirname(execPath)));
 }
 
 function getInfoPath(p: string): string {
     return path.join(p, 'Contents', 'Info.plist');
 }
 
-function getInfoKey(bundleId: string, key: string, callback: (err: Error | string | null, value?: any) => void): void {
-    findBundle(bundleId, (findErr, bundlePath) => {
-        if (findErr) {
-            return callback(findErr);
-        }
-
-        parse(getInfoPath(bundlePath!), (infoErr, data) => {
-            if (infoErr) {
-                return callback(infoErr);
-            }
-
-            callback(null, data[key]);
-        });
-    });
+async function getInfoKey(bundleId: string, key: string): Promise<any> {
+    const bundlePath = await findBundle(bundleId);
+    const data = await parse(getInfoPath(bundlePath));
+    return data[key];
 }
 
 export { findBundle as find, getInfoKey };

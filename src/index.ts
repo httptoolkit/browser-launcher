@@ -30,54 +30,29 @@ interface Browser {
     command: string;
 }
 
-type LauncherCallback = (err: Error | string | null, launch?: LaunchFunction) => void;
-type LaunchCallback = (err: Error | string | null, instance?: Instance) => void;
-
 interface LaunchFunction {
-    (uri: string, options: string | LaunchOptions, callback: LaunchCallback): void;
+    (uri: string, options: string | LaunchOptions): Promise<Instance>;
     browsers: any[];
 }
 
 /**
  * Check the configuration and prepare a launcher function.
  * If there's no config ready, detect available browsers first.
- * Finally, pass a launcher function to the callback.
+ * Returns a launcher function.
  */
-function getLauncher(callback: LauncherCallback): void;
-function getLauncher(configFile: string, callback: LauncherCallback): void;
-function getLauncher(configFileOrCallback: string | LauncherCallback, callback?: LauncherCallback): void {
-    let configFile: string;
-    let cb: LauncherCallback;
+async function getLauncher(configFile?: string): Promise<LaunchFunction> {
+    const file = configFile || configModule.defaultConfigFile;
 
-    if (typeof configFileOrCallback === 'function') {
-        cb = configFileOrCallback;
-        configFile = configModule.defaultConfigFile;
-    } else {
-        configFile = configFileOrCallback;
-        cb = callback!;
-    }
-
-    configModule.read(configFile, (err, config) => {
-        if (!config) {
-            safeConfigUpdate(configFile, (err, config) => {
-                if (err) {
-                    cb(err);
-                } else {
-                    cb(null, wrap(config!));
-                }
-            });
-        } else {
-            cb(null, wrap(config));
-        }
-    });
+    const { data: config } = await configModule.read(file);
+    const finalConfig = config || await safeConfigUpdate(file);
 
     function wrap(config: Config): LaunchFunction {
-        const res = launch.bind(null, config) as LaunchFunction;
+        const res = launch.bind(null, config, file) as LaunchFunction;
         res.browsers = config.browsers;
         return res;
     }
 
-    function launch(config: Config, uri: string, options: string | LaunchOptions, callback: LaunchCallback): void {
+    async function launch(config: Config, configFile: string, uri: string, options: string | LaunchOptions): Promise<Instance> {
         let opts: LaunchOptions;
 
         if (typeof options === 'string') {
@@ -94,94 +69,61 @@ function getLauncher(configFileOrCallback: string | LauncherCallback, callback?:
 
         if (!runner) {
             // update the list of available browsers and retry
-            safeConfigUpdate(configFile, (err, newConfig) => {
-                runner = runBrowser(newConfig!, name, version);
-                if (!runner) {
-                    return callback(name + ' is not installed in your system.');
-                }
-
-                runner(uri, opts, callback);
-            });
-        } else {
-            runner(uri, opts, callback);
+            const newConfig = await safeConfigUpdate(configFile);
+            runner = runBrowser(newConfig, name, version);
+            if (!runner) {
+                throw new Error(name + ' is not installed in your system.');
+            }
         }
+
+        return await runner(uri, opts);
     }
+
+    return wrap(finalConfig);
 }
 
 /**
  * Detect available browsers
  */
-getLauncher.detect = function (callback: (browsers: Browser[]) => void): void {
-    detect((browsers) => {
-        callback(browsers.map((browser) => {
-            return pick(browser, ['name', 'version', 'type', 'command']);
-        }));
-    });
-};
+async function detectBrowsers(): Promise<Browser[]> {
+    const browsers = await detect();
+    return browsers.map((browser) => {
+        return pick(browser, ['name', 'version', 'type', 'command']);
+    }) as Browser[];
+}
 
 /**
  * Detect the available browsers and build appropriate profiles if necessary
  */
-function buildConfig(configDir: string, callback: (err: Error | null, config?: Config) => void): void {
-    detect((browsers) => {
-        createProfiles(browsers as any, configDir, (err) => {
-            if (err) {
-                return callback(err);
-            }
-
-            callback(null, {
-                browsers: browsers
-            });
-        });
-    });
+async function buildConfig(configDir: string): Promise<Config> {
+    const browsers = await detect();
+    await createProfiles(browsers as any, configDir);
+    return { browsers };
 }
 
-function safeConfigUpdate(configFile: string, callback: (err: Error | null, config?: Config) => void): void {
+async function safeConfigUpdate(configFile: string): Promise<Config> {
     // Detect browsers etc, and try to update the config file, but return the
     // detected config regardless of whether the config file actually works
-    buildConfig(path.dirname(configFile), (err, config) => {
-        if (err) {
-            return callback(err);
-        }
+    const config = await buildConfig(path.dirname(configFile));
 
-        configModule.write(configFile, config!, (err) => {
-            if (err) {
-                console.warn(err);
-            }
-            callback(null, config);
-        });
-    });
+    try {
+        await configModule.write(configFile, config);
+    } catch (err) {
+        console.warn(err);
+    }
+
+    return config;
 }
 
 /**
  * Detect the available browsers and build appropriate profiles if necessary,
  * and update the config file with their details.
  */
-getLauncher.update = function (configFileOrCallback: string | ((err: Error | null, config?: object) => void), callback?: (err: Error | null, config?: object) => void): void {
-    let configFile: string;
-    let cb: (err: Error | null, config?: object) => void;
+async function updateBrowsers(configFile?: string): Promise<Config> {
+    const file = configFile || configModule.defaultConfigFile;
+    const config = await buildConfig(path.dirname(file));
+    await configModule.write(file, config);
+    return config;
+}
 
-    if (typeof configFileOrCallback === 'function') {
-        cb = configFileOrCallback;
-        configFile = configModule.defaultConfigFile;
-    } else {
-        configFile = configFileOrCallback;
-        cb = callback!;
-    }
-
-    buildConfig(path.dirname(configFile), (err, config) => {
-        if (err) {
-            return cb(err);
-        }
-
-        configModule.write(configFile, config!, (err) => {
-            if (err) {
-                cb(err);
-            } else {
-                cb(null, config);
-            }
-        });
-    });
-};
-
-export { getLauncher };
+export { getLauncher, detectBrowsers, updateBrowsers };

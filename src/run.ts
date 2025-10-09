@@ -36,10 +36,10 @@ interface LaunchOptions {
     tempDir?: string;
 }
 
-type SetupCallback = (err: Error | null, args?: string[], defaultArgs?: string[]) => void;
-type BrowserRunner = (uri: string, options: LaunchOptions, callback: (err: Error | string | null, instance?: Instance) => void) => void;
+type SetupResult = { args: string[]; defaultArgs: string[] };
+type BrowserRunner = (uri: string, options: LaunchOptions) => Promise<Instance>;
 
-const setups: { [browserType: string]: (browser: Browser, options: LaunchOptions, callback: SetupCallback) => void } = {};
+const setups: { [browserType: string]: (browser: Browser, options: LaunchOptions) => Promise<SetupResult> } = {};
 
 /**
  * Get the major section of a semver string
@@ -51,25 +51,28 @@ function major(version: string): number {
 /**
  * Copy a file
  */
-function copy(src: string, dest: string, callback: (err?: Error | null) => void): void {
-    const rs = fs.createReadStream(src);
-    const ws = fs.createWriteStream(dest);
-    let called = false;
+async function copy(src: string, dest: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+        const rs = fs.createReadStream(src);
+        const ws = fs.createWriteStream(dest);
+        let called = false;
 
-    function done(err?: Error | null) {
-        if (!called) {
-            called = true;
-            callback(err);
+        function done(err?: Error | null) {
+            if (!called) {
+                called = true;
+                if (err) reject(err);
+                else resolve();
+            }
         }
-    }
 
-    rs.on('error', done);
-    ws.on('error', done);
-    ws.on('close', () => {
-        done();
+        rs.on('error', done);
+        ws.on('error', done);
+        ws.on('close', () => {
+            done();
+        });
+
+        rs.pipe(ws);
     });
-
-    rs.pipe(ws);
 }
 
 /**
@@ -133,22 +136,18 @@ function formatNoProxyChrome(options: LaunchOptions): string {
  * - create and write prefs.js file
  * - collect command line arguments necessary to launch the browser
  */
-setups.firefox = function (browser: Browser, options: LaunchOptions, callback: SetupCallback): void {
+setups.firefox = async function (browser: Browser, options: LaunchOptions): Promise<SetupResult> {
     if (options.profile === null) {
         // profile: null disables profile setup, so we can skip all of this. Unfortunately
         // it's not possible to configure other settings without controlling the profile,
         // so we error if you try:
         if (options.proxy || options.prefs) {
-            callback(
-                new Error(
-                    "Cannot set Firefox proxy and/or prefs options when profile is set to null."
-                )
+            throw new Error(
+                "Cannot set Firefox proxy and/or prefs options when profile is set to null."
             );
-            return;
         }
 
-        callback(null, options.options, []);
-        return;
+        return { args: options.options || [], defaultArgs: [] };
     }
 
     const profileDir = options.profile || path.join(os.tmpdir(), "browser-launcher" + crypto.randomBytes(5).toString('hex'));
@@ -198,21 +197,22 @@ setups.firefox = function (browser: Browser, options: LaunchOptions, callback: S
         '-profile', profileDir
     ]);
 
-    fs.writeFile(file, prefsStr, (err) => {
-        if (err) {
-            callback(err);
-        } else {
-            callback(null, options.options, []);
-        }
+    await new Promise<void>((resolve, reject) => {
+        fs.writeFile(file, prefsStr, (err) => {
+            if (err) reject(err);
+            else resolve();
+        });
     });
+
+    return { args: options.options, defaultArgs: [] };
 };
 
 /**
  * Setup procedure for IE and Safari browsers:
- *  - just run callback, can't really set any options
+ *  - just return empty arrays, can't really set any options
  */
-setups.safari = function (browser: Browser, options: LaunchOptions, callback: SetupCallback): void {
-    callback(null, [], []);
+setups.safari = async function (browser: Browser, options: LaunchOptions): Promise<SetupResult> {
+    return { args: [], defaultArgs: [] };
 };
 setups.ie = setups.safari;
 
@@ -220,7 +220,7 @@ setups.ie = setups.safari;
  * Setup procedure for Chrome browser:
  * - collect command line arguments necessary to launch the browser
  */
-setups.chrome = function (browser: Browser, options: LaunchOptions, callback: SetupCallback): void {
+setups.chrome = async function (browser: Browser, options: LaunchOptions): Promise<SetupResult> {
     options.options = options.options || [];
     const profile = options.profile !== undefined
         ? options.profile
@@ -248,7 +248,7 @@ setups.chrome = function (browser: Browser, options: LaunchOptions, callback: Se
         '--noerrdialogs'
     ];
 
-    callback(null, options.options, defaults);
+    return { args: options.options, defaultArgs: defaults };
 };
 setups.chromium = setups.chrome;
 
@@ -261,14 +261,17 @@ setups.arc = setups.chrome;
  * Setup procedure for PhantomJS:
  * - configure PhantomJS to open res/phantom.js script
  */
-setups.phantomjs = function (browser: Browser, options: LaunchOptions, callback: SetupCallback): void {
+setups.phantomjs = async function (browser: Browser, options: LaunchOptions): Promise<SetupResult> {
     options.options = options.options || [];
 
-    callback(null, options.options.concat([
-        options.proxy ? '--proxy=' + options.proxy.replace(/^http:\/\//, '') : null as any,
-        path.join(import.meta.dirname, '../res/phantom.js'),
-        [] as any
-    ]));
+    return {
+        args: options.options.concat([
+            options.proxy ? '--proxy=' + options.proxy.replace(/^http:\/\//, '') : null as any,
+            path.join(import.meta.dirname, '../res/phantom.js'),
+            [] as any
+        ]),
+        defaultArgs: []
+    };
 };
 
 /**
@@ -277,7 +280,7 @@ setups.phantomjs = function (browser: Browser, options: LaunchOptions, callback:
  *   (res/operaprefs.ini or res/Preferences) to the profile directory
  * - collect command line arguments necessary to launch the browser
  */
-setups.opera = function (browser: Browser, options: LaunchOptions, callback: SetupCallback): void {
+setups.opera = async function (browser: Browser, options: LaunchOptions): Promise<SetupResult> {
     const prefs: { [key: string]: string } = {
         old: 'operaprefs.ini',
         blink: 'Preferences'
@@ -324,17 +327,8 @@ setups.opera = function (browser: Browser, options: LaunchOptions, callback: Set
         }
     }
 
-    copy(src, dest, (err) => {
-        if (err) {
-            callback(err);
-        } else {
-            callback(
-                null,
-                options.options,
-                engine[generation]
-            );
-        }
-    });
+    await copy(src, dest);
+    return { args: options.options, defaultArgs: engine[generation] };
 };
 
 /**
@@ -348,8 +342,8 @@ function runBrowser(config: Config, name: string, version: string): BrowserRunne
         return undefined;
     }
 
-    return function (uri: string, options: LaunchOptions, callback: (err: Error | string | null, instance?: Instance) => void): void {
-        function run(customEnv: NodeJS.ProcessEnv): void {
+    return async function (uri: string, options: LaunchOptions): Promise<Instance> {
+        async function run(customEnv: NodeJS.ProcessEnv): Promise<Instance> {
             const env: NodeJS.ProcessEnv = {};
             let cwd = process.cwd();
 
@@ -366,91 +360,85 @@ function runBrowser(config: Config, name: string, version: string): BrowserRunne
             browser = Object.assign({}, browser);
 
             // setup the browser
-            setups[browser!.type](browser!, options, (err, args, defaultArgs) => {
-                if (err) {
-                    return callback(err);
-                }
+            const { args, defaultArgs } = await setups[browser!.type](browser!, options);
 
-                let finalArgs = args!;
-                if (!options.skipDefaults) {
-                    finalArgs = finalArgs.concat(defaultArgs!);
-                }
+            let finalArgs = args;
+            if (!options.skipDefaults) {
+                finalArgs = finalArgs.concat(defaultArgs);
+            }
 
-                // pass proxy configuration to the new environment
-                const noProxy = formatNoProxyStandard(options);
-                if (noProxy && env.no_proxy === undefined) {
-                    env.no_proxy = noProxy;
-                }
+            // pass proxy configuration to the new environment
+            const noProxy = formatNoProxyStandard(options);
+            if (noProxy && env.no_proxy === undefined) {
+                env.no_proxy = noProxy;
+            }
 
-                if (options.proxy && env.http_proxy === undefined) {
-                    env.http_proxy = options.proxy;
-                }
+            if (options.proxy && env.http_proxy === undefined) {
+                env.http_proxy = options.proxy;
+            }
 
-                if (options.proxy && env.HTTP_PROXY === undefined) {
-                    env.HTTP_PROXY = options.proxy;
-                }
+            if (options.proxy && env.HTTP_PROXY === undefined) {
+                env.HTTP_PROXY = options.proxy;
+            }
 
-                // prepare the launch command for Windows systems
-                if (process.platform === 'win32') {
-                    // ensure all the quotes are removed
-                    browser!.command = browser!.command.replace(/"/g, '');
-                    // change directory to the app's base (Chrome)
-                    cwd = path.dirname(browser!.command);
-                }
+            // prepare the launch command for Windows systems
+            if (process.platform === 'win32') {
+                // ensure all the quotes are removed
+                browser!.command = browser!.command.replace(/"/g, '');
+                // change directory to the app's base (Chrome)
+                cwd = path.dirname(browser!.command);
+            }
 
-                // prepare the launch command for OSX systems
-                if (process.platform === 'darwin' && browser!.command.endsWith('.app')) {
-                    // use the binary paths under the hood
+            // prepare the launch command for OSX systems
+            if (process.platform === 'darwin' && browser!.command.endsWith('.app')) {
+                // use the binary paths under the hood
 
-                    // open --wait-apps --new --fresh -a /Path/To/Executable <url> --args <rest of app args>
-                    finalArgs.unshift(
-                        '--wait-apps',
-                        ...(!browser!.neverStartFresh // Some browsers can't start fresh, so don't bother
-                            ? [
-                                '--new',
-                                '--fresh',
-                            ] : []
-                        ),
-                        '-a',
-                        browser!.command,
-                        ...((finalArgs.length || uri) ? ['--args'] : []),
-                        uri
-                    );
+                // open --wait-apps --new --fresh -a /Path/To/Executable <url> --args <rest of app args>
+                finalArgs.unshift(
+                    '--wait-apps',
+                    ...(!browser!.neverStartFresh // Some browsers can't start fresh, so don't bother
+                        ? [
+                            '--new',
+                            '--fresh',
+                        ] : []
+                    ),
+                    '-a',
+                    browser!.command,
+                    ...((finalArgs.length || uri) ? ['--args'] : []),
+                    uri
+                );
 
-                    browser!.processName = browser!.command;
-                    browser!.command = 'open';
-                } else {
-                    finalArgs.push(uri);
-                }
+                browser!.processName = browser!.command;
+                browser!.command = 'open';
+            } else {
+                finalArgs.push(uri);
+            }
 
-                browser!.tempDir = options.tempDir;
+            browser!.tempDir = options.tempDir;
 
-                try {
-                    callback(null, new Instance(assign({}, browser, {
-                        args: finalArgs.filter(Boolean),
-                        detached: options.detached,
-                        env: env,
-                        cwd: cwd
-                    })));
-                } catch (e) {
-                    callback(e as Error);
-                }
-            });
+            return new Instance(assign({}, browser, {
+                args: finalArgs.filter(Boolean),
+                detached: options.detached,
+                env: env,
+                cwd: cwd
+            }));
         }
 
         // run a regular browser in a "headless" mode
         if (options.headless && !browser!.headless) {
-            headless((err: Error | null, proc: any, display: number) => {
-                if (err) {
-                    return callback(err);
-                }
+            return new Promise((resolve, reject) => {
+                headless((err: Error | null, proc: any, display: number) => {
+                    if (err) {
+                        return reject(err);
+                    }
 
-                run({
-                    DISPLAY: ':' + display
+                    run({
+                        DISPLAY: ':' + display
+                    }).then(resolve).catch(reject);
                 });
             });
         } else {
-            run({});
+            return run({});
         }
     };
 }
