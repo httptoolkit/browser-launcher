@@ -7,7 +7,6 @@
     "outDir": "./dist",
     "rootDir": "./src",
 
-    "allowJs": true,
     "declaration": true,
     "sourceMap": true,
 

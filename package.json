@@ -11,7 +11,7 @@
     "build": "tsc",
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
-    "test": "mocha 'test/**/*.test.js'",
+    "test": "mocha --require tsx 'test/**/*.test.js'",
     "prepublishOnly": "npm run build"
   },
   "files": [
@@ -26,7 +26,6 @@
     "@httptoolkit/osx-find-executable": "^2.0.1",
     "headless": "^1.0.0",
     "lodash": "^4.17.21",
-    "mkdirp": "^0.5.0",
     "osenv": "^0.1.0",
     "rimraf": "^2.6.1",
     "simple-plist": "^1.0.0",
@@ -64,10 +63,12 @@
   },
   "devDependencies": {
     "@types/chai": "^5.2.2",
+    "@types/lodash": "^4.17.20",
     "@types/mocha": "^10.0.10",
     "@types/node": "^12.0.2",
     "chai": "^6.2.0",
     "mocha": "^11.7.4",
+    "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   }
 }

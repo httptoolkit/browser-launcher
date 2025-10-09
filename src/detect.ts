@@ -1,23 +1,35 @@
-var spawn = require('child_process').spawn;
-var winDetect = require('win-detect-browsers');
-var darwin = require('./darwin');
-var assign = require('lodash/assign');
-var Browsers = require('./browsers');
-var browsers = new Browsers();
+import { spawn } from 'child_process';
+const winDetect = require('win-detect-browsers');
+import darwin = require('./darwin');
+import assign from 'lodash/assign';
+import Browsers = require('./browsers');
+
+const browsers = new Browsers();
+
+interface DetectedBrowser {
+    type: string;
+    name: string;
+    command: string;
+    version: string;
+    profile?: string | boolean;
+    [key: string]: any;
+}
+
+type DetectCallback = (browsers: DetectedBrowser[]) => void;
+type BrowserCheckCallback = (err: Error | string | null, version?: string, path?: string) => void;
 
 /**
  * Detect all available browsers on Windows systems.
  * Pass an array of detected browsers to the callback function when done.
- * @param {Function} callback Callback function
  */
-function detectWindows(callback) {
-    winDetect(function (error, found) {
+function detectWindows(callback: (err: Error | null, browsers?: DetectedBrowser[]) => void): void {
+    winDetect((error: Error | null, found: any[]) => {
         if (error) return callback(error);
 
-        const available = found.map(function (browser) {
+        const available = found.map((browser) => {
             const config = browsers.typeConfig(browser.name);
 
-            let configName;
+            let configName: string;
             if (browser.channel && browser.channel !== "stable" && browser.channel !== "release") {
                 configName = `${browser.name}-${browser.channel}`;
             } else {
@@ -39,16 +51,14 @@ function detectWindows(callback) {
 /**
  * Check if the given browser is available (on OSX systems).
  * Pass its version and path to the callback function if found.
- * @param {String}   name     Name of a browser
- * @param {Function} callback Callback function
  */
-function checkDarwin(name, callback) {
-    darwin[name].version(function (versionErr, version) {
+function checkDarwin(name: string, callback: BrowserCheckCallback): void {
+    darwin[name].version((versionErr: Error | string | null, version?: string) => {
         if (versionErr) {
             return callback('failed to get version for ' + name);
         }
 
-        darwin[name].path(function (pathErr, path) {
+        darwin[name].path((pathErr: Error | string | null, path?: string) => {
             if (pathErr) {
                 return callback('failed to get path for ' + name);
             }
@@ -61,32 +71,32 @@ function checkDarwin(name, callback) {
 /**
  * Attempt to run browser (on Unix systems) to determine version.
  * If found, the version is provided to the callback
- * @param {String}   name     Name of a browser
- * @param {RegExp}     regex      Extracts version from command output
- * @param {Function} callback Callback function
  */
-function getCommandVersion(name, regex, callback) {
-    var process;
+function getCommandVersion(name: string, regex: RegExp, callback: (err: Error | string | null, version?: string) => void): void {
+    let childProcess;
     try {
-        process = spawn(name, ['--version']);
+        childProcess = spawn(name, ['--version']);
     } catch (e) {
-        callback(e);
+        callback(e as Error);
         return;
     }
 
-    var data = '';
+    let data = '';
 
-    process.stdout.on('data', function (buf) {
+    childProcess.stdout.on('data', (buf) => {
         data += buf;
     });
 
-    process.on('error', function () {
-        callback('not installed');
-        callback = null;
+    let callbackCalled = false;
+    childProcess.on('error', () => {
+        if (!callbackCalled) {
+            callbackCalled = true;
+            callback('not installed');
+        }
     });
 
-    process.on('close', function (code) {
-        if (!callback) {
+    childProcess.on('close', (code) => {
+        if (callbackCalled) {
             return;
         }
 
@@ -94,8 +104,8 @@ function getCommandVersion(name, regex, callback) {
             return callback('not installed');
         }
 
-        var match = regex.exec(data);
-        var version = match ? match[1] : data.trim();
+        const match = regex.exec(data);
+        const version = match ? match[1] : data.trim();
         callback(null, version);
     });
 }
@@ -103,15 +113,12 @@ function getCommandVersion(name, regex, callback) {
 /**
  * Check if the given browser is available (on Unix systems).
  * Pass its version and command to the callback function if found.
- * @param {Array}    commands List of potential commands used to start browser
- * @param {RegExp}     regex extracts version from browser's command-line output
- * @param {Function} callback Callback function
  */
-function checkUnix(commands, regex, callback) {
-    var checkCount = 0;
-    var detectedVersion;
+function checkUnix(commands: string[], regex: RegExp, callback: BrowserCheckCallback): void {
+    let checkCount = 0;
+    let detectedVersion: string | undefined;
 
-    commands.forEach(function (command) {
+    commands.forEach((command) => {
         /*
              There could be multiple commands run per browser on Linux, and we can't call the callback on _every_
              successful command invocation, because then it will be called more than `browserPlatforms.length` times.
@@ -120,7 +127,7 @@ function checkUnix(commands, regex, callback) {
              multiple commands (due to symlinking or whatnot). Only the last _successful_ "check" will be saved and
              passed on
              */
-        getCommandVersion(command, regex, function linuxDone(err, version) {
+        getCommandVersion(command, regex, (err, version) => {
             checkCount++;
             if (!err) {
                 detectedVersion = version;
@@ -136,32 +143,31 @@ function checkUnix(commands, regex, callback) {
 /**
  * Detect all available web browsers.
  * Pass an array of available browsers to the callback function when done.
- * @param {Function} callback Callback function
  */
-module.exports = function detect(callback) {
+function detect(callback: DetectCallback): void {
     if (process.platform === 'win32') {
-        detectWindows(function (err, browsers) {
+        detectWindows((err, foundBrowsers) => {
             if (err) callback([]);
-            else callback(browsers);
+            else callback(foundBrowsers!);
         });
         return;
     }
 
-    var available = [];
-    var detectAttempts = 0;
-    var browserPlatforms = browsers.browserPlatforms();
+    const available: DetectedBrowser[] = [];
+    let detectAttempts = 0;
+    const browserPlatforms = browsers.browserPlatforms();
 
-    browserPlatforms.forEach(function (browserPlatform) {
-        function browserDone(err, version, path) {
+    browserPlatforms.forEach((browserPlatform) => {
+        function browserDone(err: Error | string | null, version?: string, path?: string) {
             detectAttempts++;
-            if (!err) {
-                var config = browsers.typeConfig(browserPlatform.type);
+            if (!err && version && path) {
+                const config = browsers.typeConfig(browserPlatform.type);
                 available.push(assign({}, config, {
                     type: browserPlatform.type,
-                    name: browserPlatform.darwin,
+                    name: browserPlatform.darwin || browserPlatform.type,
                     command: path,
                     version: version
-                }));
+                }) as DetectedBrowser);
             }
 
             if (detectAttempts === browserPlatforms.length) {
@@ -170,21 +176,23 @@ module.exports = function detect(callback) {
         }
 
         if (process.platform === 'darwin') {
-            if (darwin[browserPlatform.darwin]) {
+            if (browserPlatform.darwin && darwin[browserPlatform.darwin]) {
                 // If we have a darwin-specific bundle id to search for, use it:
                 checkDarwin(browserPlatform.darwin, browserDone);
             } else if (browserPlatform.darwin && browserPlatform.linux) {
                 // If it's darwin-supported, but with no bundle id, search $PATH
                 // as we do on linux:
-                checkUnix(browserPlatform.linux, browserPlatform.regex, browserDone);
+                checkUnix(browserPlatform.linux, browserPlatform.regex!, browserDone);
             } else {
-                browserDone(new Error('Not supported'));
+                browserDone(new Error('Not supported') as any);
             }
         } else if (browserPlatform.linux) {
             // On Linux, for supported browsers, we always just search $PATH:
-            checkUnix(browserPlatform.linux, browserPlatform.regex, browserDone);
+            checkUnix(browserPlatform.linux, browserPlatform.regex!, browserDone);
         } else {
-            browserDone(new Error('Not supported'));
+            browserDone(new Error('Not supported') as any);
         }
     });
-};
+}
+
+export = detect;
