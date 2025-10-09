@@ -10,7 +10,7 @@
   "scripts": {
     "build": "tsc --noEmit ./types.d.ts",
     "pretest": "npm run build",
-    "test": "ava"
+    "test": "mocha 'test/**/*.test.js'"
   },
   "directories": {
     "example": "example",
@@ -54,17 +54,14 @@
   ],
   "license": "MIT",
   "engine": {
-    "node": ">=12"
+    "node": ">=22"
   },
   "devDependencies": {
+    "@types/chai": "^5.2.2",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^12.0.2",
-    "ava": "^0.25.0",
+    "chai": "^6.2.0",
+    "mocha": "^11.7.4",
     "typescript": "^3.4.5"
-  },
-  "ava": {
-    "failFast": true,
-    "files": [
-      "test/**/*.js"
-    ]
   }
 }
