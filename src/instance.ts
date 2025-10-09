@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { spawn, exec, ChildProcess } from 'child_process';
-const rimraf = require('rimraf');
+import * as fs from 'fs';
 import { Readable } from 'stream';
 
 interface InstanceOptions {
@@ -63,7 +63,7 @@ class Instance extends EventEmitter {
         // clean-up the temp directory once the instance stops
         if (this.tempDir) {
             this.on('stop', () => {
-                rimraf(this.tempDir!, () => { /* .. */ });
+                fs.rm(this.tempDir!, { recursive: true, force: true }, () => { /* ignore cleanup errors */ });
             });
         }
     }
@@ -95,4 +95,4 @@ class Instance extends EventEmitter {
     }
 }
 
-export = Instance;
+export { Instance };

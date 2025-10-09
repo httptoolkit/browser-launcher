@@ -1,5 +1,5 @@
-const { expect } = require('chai');
-const Browsers = require('../src/browsers');
+import { expect } from 'chai';
+import { Browsers } from '../src/browsers.js';
 
 describe('Browsers', function() {
     describe('browserPlatforms()', function() {

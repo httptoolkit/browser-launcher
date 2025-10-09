@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "node20",
+    "moduleResolution": "node16",
 
     "outDir": "./dist",
     "rootDir": "./src",
@@ -11,6 +11,7 @@
     "sourceMap": true,
 
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
 
     "strict": true,

@@ -2,14 +2,21 @@
   "name": "@httptoolkit/browser-launcher",
   "version": "2.3.0",
   "description": "Detect, launch and stop browser versions",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "bin": {
     "browser-launcher": "./dist/bin.js"
   },
   "scripts": {
     "build": "tsc",
-    "clean": "rimraf dist",
+    "clean": "node -e \"require('fs').rmSync('dist', {recursive: true, force: true})\"",
     "prebuild": "npm run clean",
     "test": "mocha --require tsx 'test/**/*.test.js'",
     "prepublishOnly": "npm run build"
@@ -26,10 +33,7 @@
     "@httptoolkit/osx-find-executable": "^2.0.1",
     "headless": "^1.0.0",
     "lodash": "^4.17.21",
-    "osenv": "^0.1.0",
-    "rimraf": "^2.6.1",
     "simple-plist": "^1.0.0",
-    "uid": "^2.0.0",
     "win-detect-browsers": "^7.0.0"
   },
   "repository": {
@@ -65,7 +69,7 @@
     "@types/chai": "^5.2.2",
     "@types/lodash": "^4.17.20",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^12.0.2",
+    "@types/node": "^24.7.0",
     "chai": "^6.2.0",
     "mocha": "^11.7.4",
     "tsx": "^4.20.6",

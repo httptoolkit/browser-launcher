@@ -1,8 +1,8 @@
 import { spawn } from 'child_process';
-const winDetect = require('win-detect-browsers');
-import darwin = require('./darwin');
-import assign from 'lodash/assign';
-import Browsers = require('./browsers');
+import { darwinBrowsers } from './darwin/index.js';
+import assign from 'lodash/assign.js';
+import { Browsers } from './browsers.js';
+import winDetect from 'win-detect-browsers';
 
 const browsers = new Browsers();
 
@@ -53,12 +53,12 @@ function detectWindows(callback: (err: Error | null, browsers?: DetectedBrowser[
  * Pass its version and path to the callback function if found.
  */
 function checkDarwin(name: string, callback: BrowserCheckCallback): void {
-    darwin[name].version((versionErr: Error | string | null, version?: string) => {
+    darwinBrowsers[name].version((versionErr: Error | string | null, version?: string) => {
         if (versionErr) {
             return callback('failed to get version for ' + name);
         }
 
-        darwin[name].path((pathErr: Error | string | null, path?: string) => {
+        darwinBrowsers[name].path((pathErr: Error | string | null, path?: string) => {
             if (pathErr) {
                 return callback('failed to get path for ' + name);
             }
@@ -176,7 +176,7 @@ function detect(callback: DetectCallback): void {
         }
 
         if (process.platform === 'darwin') {
-            if (browserPlatform.darwin && darwin[browserPlatform.darwin]) {
+            if (browserPlatform.darwin && darwinBrowsers[browserPlatform.darwin]) {
                 // If we have a darwin-specific bundle id to search for, use it:
                 checkDarwin(browserPlatform.darwin, browserDone);
             } else if (browserPlatform.darwin && browserPlatform.linux) {
@@ -195,4 +195,4 @@ function detect(callback: DetectCallback): void {
     });
 }
 
-export = detect;
+export { detect };

@@ -1,18 +1,20 @@
 declare module 'win-detect-browsers' {
     function detect(callback: (error: Error | null, browsers: any[]) => void): void;
-    export = detect;
-}
-
-declare module 'rimraf' {
-    function rimraf(path: string, callback: (err: Error | null) => void): void;
-    export = rimraf;
+    export default detect;
 }
 
 declare module 'headless' {
     function headless(callback: (err: Error | null, proc: any, display: number) => void): void;
-    export = headless;
+    export default headless;
 }
 
-declare module 'osenv' {
-    export function home(): string;
+declare module 'simple-plist' {
+    interface SimplePlist {
+        readFile(file: string, callback: (err: Error | null, data: any) => void): void;
+        readFileSync(file: string): any;
+        writeFile(file: string, data: any, callback: (err: Error | null) => void): void;
+        writeFileSync(file: string, data: any): void;
+    }
+    const plist: SimplePlist;
+    export default plist;
 }

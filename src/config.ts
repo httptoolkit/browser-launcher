@@ -1,9 +1,9 @@
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
-const packageJson = require('../package.json');
-const osenv = require('osenv');
+import packageJson from '../package.json' with { type: 'json' };
 
-const defaultConfigFile = osenv.home() + '/.config/' + packageJson.name.split('/')[1] + '/config.json';
+const defaultConfigFile = os.homedir() + '/.config/' + packageJson.name.split('/')[1] + '/config.json';
 
 interface Config {
     browsers: any[];

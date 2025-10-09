@@ -1,4 +1,4 @@
-import omit from 'lodash/omit';
+import omit from 'lodash/omit.js';
 
 type Platform = 'darwin' | 'linux' | 'windows';
 
@@ -161,4 +161,4 @@ class Browsers {
     }
 }
 
-export = Browsers;
+export { Browsers };

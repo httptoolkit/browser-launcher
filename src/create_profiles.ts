@@ -50,4 +50,4 @@ function createProfiles(browsers: Browser[], configDir: string, callback: (err?:
     });
 }
 
-export = createProfiles;
+export { createProfiles };

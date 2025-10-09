@@ -1,4 +1,4 @@
-import * as util from './util';
+import * as util from './util.js';
 
 interface DarwinBrowser {
     path: (callback: (err: Error | string | null, path?: string) => void) => void;
@@ -12,7 +12,7 @@ function browser(id: string, versionKey: string): DarwinBrowser {
     };
 }
 
-const browsers: { [name: string]: DarwinBrowser } = {
+const darwinBrowsers: { [name: string]: DarwinBrowser } = {
     chrome: browser('com.google.Chrome', 'KSVersion'),
     'chrome-canary': browser('com.google.Chrome.canary', 'KSVersion'),
     'chrome-dev': browser('com.google.Chrome.dev', 'KSVersion'),
@@ -36,4 +36,4 @@ const browsers: { [name: string]: DarwinBrowser } = {
     arc: browser('company.thebrowser.Browser', 'CFBundleVersion')
 };
 
-export = browsers;
+export { darwinBrowsers };

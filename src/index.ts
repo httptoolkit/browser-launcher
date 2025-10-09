@@ -1,10 +1,10 @@
 import * as path from 'path';
-import pick from 'lodash/pick';
-import * as configModule from './config';
-import detect = require('./detect');
-import run = require('./run');
-import createProfiles = require('./create_profiles');
-import Instance = require('./instance');
+import pick from 'lodash/pick.js';
+import * as configModule from './config.js';
+import { detect } from './detect.js';
+import { runBrowser } from './run.js';
+import { createProfiles } from './create_profiles.js';
+import { Instance } from './instance.js';
 
 interface Config {
     browsers: any[];
@@ -90,12 +90,12 @@ function getLauncher(configFileOrCallback: string | LauncherCallback, callback?:
 
         const version = opts.version || opts.browser.split('/')[1] || '*';
         const name = opts.browser.toLowerCase().split('/')[0];
-        let runner = run(config, name, version);
+        let runner = runBrowser(config, name, version);
 
         if (!runner) {
             // update the list of available browsers and retry
             safeConfigUpdate(configFile, (err, newConfig) => {
-                runner = run(newConfig!, name, version);
+                runner = runBrowser(newConfig!, name, version);
                 if (!runner) {
                     return callback(name + ' is not installed in your system.');
                 }
@@ -184,4 +184,4 @@ getLauncher.update = function (configFileOrCallback: string | ((err: Error | nul
     });
 };
 
-export = getLauncher;
+export { getLauncher };

@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-const plist = require('simple-plist');
+import plist from 'simple-plist';
 import { findExecutableById } from '@httptoolkit/osx-find-executable';
 
 const infoCache: { [file: string]: any } = Object.create(null);

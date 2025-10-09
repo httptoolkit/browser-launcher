@@ -1,10 +1,10 @@
-const headless = require('headless');
 import * as os from 'os';
+import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
-import { uid } from 'uid';
-import assign from 'lodash/assign';
-import Instance = require('./instance');
+import assign from 'lodash/assign.js';
+import { Instance } from './instance.js';
+import headless from 'headless';
 
 interface Browser {
     type: string;
@@ -151,7 +151,7 @@ setups.firefox = function (browser: Browser, options: LaunchOptions, callback: S
         return;
     }
 
-    const profileDir = options.profile || path.join(os.tmpdir(), "browser-launcher" + uid(10));
+    const profileDir = options.profile || path.join(os.tmpdir(), "browser-launcher" + crypto.randomBytes(5).toString('hex'));
     const file = path.join(profileDir, 'prefs.js');
     let prefs: { [key: string]: any } = options.skipDefaults ? {} : {
         'browser.shell.checkDefaultBrowser': false,
@@ -266,7 +266,7 @@ setups.phantomjs = function (browser: Browser, options: LaunchOptions, callback:
 
     callback(null, options.options.concat([
         options.proxy ? '--proxy=' + options.proxy.replace(/^http:\/\//, '') : null as any,
-        path.join(__dirname, '../res/phantom.js'),
+        path.join(import.meta.dirname, '../res/phantom.js'),
         [] as any
     ]));
 };
@@ -303,7 +303,7 @@ setups.opera = function (browser: Browser, options: LaunchOptions, callback: Set
     };
     const generation = major(browser.version) >= 15 ? 'blink' : 'old';
     const prefFile = prefs[generation];
-    const src = path.join(__dirname, '../res/' + prefFile);
+    const src = path.join(import.meta.dirname, '../res/' + prefFile);
 
     const profile = options.profile || browser.profile;
     fs.mkdirSync(profile as string, { recursive: true }); // Make sure profile exists
@@ -455,4 +455,4 @@ function runBrowser(config: Config, name: string, version: string): BrowserRunne
     };
 }
 
-export = runBrowser;
+export { runBrowser };

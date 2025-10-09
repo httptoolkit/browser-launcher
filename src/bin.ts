@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-import launcher = require('.');
+import { getLauncher } from './index.js';
+
+const launcher = getLauncher;
 
 const browserArg = process.argv[2];
 const launchUrl = process.argv[3];
