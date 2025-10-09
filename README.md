@@ -169,8 +169,12 @@ instance.process.stderr.unref();
 
 ## API
 
-``` js
-import { getLauncher, detectBrowsers, updateBrowsers } from '@httptoolkit/browser-launcher';
+```js
+import {
+  getLauncher,
+  detectBrowsers,
+  updateBrowsers
+} from '@httptoolkit/browser-launcher';
 ```
 
 ### `getLauncher([configPath])`

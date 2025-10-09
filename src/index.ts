@@ -4,7 +4,7 @@ import * as configModule from './config.js';
 import { detect } from './detect.js';
 import { runBrowser } from './run.js';
 import { createProfiles } from './create_profiles.js';
-import { Instance } from './instance.js';
+import { BrowserInstance } from './instance.js';
 
 interface Config {
     browsers: any[];
@@ -31,7 +31,7 @@ interface Browser {
 }
 
 interface LaunchFunction {
-    (uri: string, options: string | LaunchOptions): Promise<Instance>;
+    (uri: string, options: string | LaunchOptions): Promise<BrowserInstance>;
     browsers: any[];
 }
 
@@ -52,7 +52,7 @@ async function getLauncher(configFile?: string): Promise<LaunchFunction> {
         return res;
     }
 
-    async function launch(config: Config, configFile: string, uri: string, options: string | LaunchOptions): Promise<Instance> {
+    async function launch(config: Config, configFile: string, uri: string, options: string | LaunchOptions): Promise<BrowserInstance> {
         let opts: LaunchOptions;
 
         if (typeof options === 'string') {
@@ -127,3 +127,5 @@ async function updateBrowsers(configFile?: string): Promise<Config> {
 }
 
 export { getLauncher, detectBrowsers, updateBrowsers };
+export type { Config, LaunchOptions, Browser, LaunchFunction };
+export { BrowserInstance } from './instance.js';

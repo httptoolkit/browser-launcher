@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 import assign from 'lodash/assign.js';
-import { Instance } from './instance.js';
+import { BrowserInstance } from './instance.js';
 import headless from 'headless';
 
 interface Browser {
@@ -37,7 +37,7 @@ interface LaunchOptions {
 }
 
 type SetupResult = { args: string[]; defaultArgs: string[] };
-type BrowserRunner = (uri: string, options: LaunchOptions) => Promise<Instance>;
+type BrowserRunner = (uri: string, options: LaunchOptions) => Promise<BrowserInstance>;
 
 const setups: { [browserType: string]: (browser: Browser, options: LaunchOptions) => Promise<SetupResult> } = {};
 
@@ -342,8 +342,8 @@ function runBrowser(config: Config, name: string, version: string): BrowserRunne
         return undefined;
     }
 
-    return async function (uri: string, options: LaunchOptions): Promise<Instance> {
-        async function run(customEnv: NodeJS.ProcessEnv): Promise<Instance> {
+    return async function (uri: string, options: LaunchOptions): Promise<BrowserInstance> {
+        async function run(customEnv: NodeJS.ProcessEnv): Promise<BrowserInstance> {
             const env: NodeJS.ProcessEnv = {};
             let cwd = process.cwd();
 
@@ -416,7 +416,7 @@ function runBrowser(config: Config, name: string, version: string): BrowserRunne
 
             browser!.tempDir = options.tempDir;
 
-            return new Instance(assign({}, browser, {
+            return new BrowserInstance(assign({}, browser, {
                 args: finalArgs.filter(Boolean),
                 detached: options.detached,
                 env: env,

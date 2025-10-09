@@ -19,7 +19,7 @@ interface InstanceOptions {
 /**
  * Web browser instance
  */
-class Instance extends EventEmitter {
+class BrowserInstance extends EventEmitter {
     command: string;
     args: string[];
     image?: string;
@@ -95,4 +95,4 @@ class Instance extends EventEmitter {
     }
 }
 
-export { Instance };
+export { BrowserInstance };
