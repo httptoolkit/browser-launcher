@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const launcher = require('..');
+const launcher = require('../src/index');
 
 describe('Browser Launcher Integration Tests', function() {
     // Browser detection can be slow on some systems

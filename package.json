@@ -2,16 +2,22 @@
   "name": "@httptoolkit/browser-launcher",
   "version": "2.3.0",
   "description": "Detect, launch and stop browser versions",
-  "main": "index.js",
-  "types": "./types.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "bin": {
-    "browser-launcher": "./bin.js"
+    "browser-launcher": "./dist/bin.js"
   },
   "scripts": {
-    "build": "tsc --noEmit ./types.d.ts",
-    "pretest": "npm run build",
-    "test": "mocha 'test/**/*.test.js'"
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "prebuild": "npm run clean",
+    "test": "mocha 'test/**/*.test.js'",
+    "prepublishOnly": "npm run build"
   },
+  "files": [
+    "dist",
+    "res"
+  ],
   "directories": {
     "example": "example",
     "res": "res"
@@ -62,6 +68,6 @@
     "@types/node": "^12.0.2",
     "chai": "^6.2.0",
     "mocha": "^11.7.4",
-    "typescript": "^3.4.5"
+    "typescript": "^5.9.3"
   }
 }

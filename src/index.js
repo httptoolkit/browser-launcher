@@ -1,9 +1,9 @@
 var path = require('path'),
     pick = require('lodash/pick'),
-    configModule = require('./lib/config'),
-    detect = require('./lib/detect'),
-    run = require('./lib/run'),
-    createProfiles = require('./lib/create_profiles');
+    configModule = require('./config'),
+    detect = require('./detect'),
+    run = require('./run'),
+    createProfiles = require('./create_profiles');
 
 /**
  * Check the configuration and prepare a launcher function.

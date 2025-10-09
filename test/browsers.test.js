@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const Browsers = require('../lib/browsers');
+const Browsers = require('../src/browsers');
 
 describe('Browsers', function() {
     describe('browserPlatforms()', function() {
