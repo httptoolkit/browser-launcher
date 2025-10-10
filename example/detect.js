@@ -1,6 +1,6 @@
-var launcher = require('../');
+import { detectBrowsers } from '../dist/index.js';
 
-launcher.detect(function logBrowsers(available) {
-  console.log('Available browsers:');
-  console.dir(available);
-});
+const available = await detectBrowsers();
+
+console.log('Available browsers:');
+console.dir(available);

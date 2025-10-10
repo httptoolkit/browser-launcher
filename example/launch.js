@@ -1,23 +1,15 @@
-var launcher = require('../');
+import { getLauncher } from '../dist/index.js';
 
-launcher(function startBrowser(initErr, launch) {
-    if (initErr) {
-        return console.error(initErr);
-    }
+const launch = await getLauncher();
 
-    launch('http://cksource.com/', process.env.BROWSER || 'chrome', function afterLaunch(launchErr, instance) {
-        if (launchErr) {
-            return console.error(launchErr);
-        }
+const instance = await launch('http://cksource.com/', process.env.BROWSER || 'chrome');
 
-        console.log('Instance started with PID:', instance.pid);
+console.log('Instance started with PID:', instance.pid);
 
-        setTimeout(function stop() {
-            instance.stop();
-        }, 10000);
+setTimeout(function stop() {
+    instance.stop();
+}, 10000);
 
-        instance.on('stop', function logCode(code) {
-            console.log('Instance stopped with exit code:', code);
-        });
-    });
+instance.on('stop', function logCode(code) {
+    console.log('Instance stopped with exit code:', code);
 });
