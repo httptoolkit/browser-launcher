@@ -1,5 +1,10 @@
 declare module 'win-detect-browsers' {
-    function detect(callback: (error: Error | null, browsers: any[]) => void): void;
+    function detect(): Promise<Array<{
+        name: string;
+        path: string;
+        version: string;
+        channel?: string;
+    }>>;
     export default detect;
 }
 

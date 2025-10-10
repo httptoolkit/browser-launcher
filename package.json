@@ -34,7 +34,7 @@
     "headless": "^1.0.0",
     "lodash": "^4.17.21",
     "simple-plist": "^1.0.0",
-    "win-detect-browsers": "^7.0.0"
+    "win-detect-browsers": "^8.0.0"
   },
   "repository": {
     "type": "git",

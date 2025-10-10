@@ -2,7 +2,7 @@ import { spawn } from 'child_process';
 import { darwinBrowsers } from './darwin/index.js';
 import assign from 'lodash/assign.js';
 import { Browsers } from './browsers.js';
-import winDetect from 'win-detect-browsers';
+import winDetectBrowsers from 'win-detect-browsers';
 
 const browsers = new Browsers();
 
@@ -20,31 +20,26 @@ interface DetectedBrowser {
  * Returns an array of detected browsers.
  */
 async function detectWindows(): Promise<DetectedBrowser[]> {
-    return new Promise((resolve, reject) => {
-        winDetect((error: Error | null, found: any[]) => {
-            if (error) return reject(error);
+    const results = await winDetectBrowsers();
 
-            const available = found.map((browser) => {
-                const config = browsers.typeConfig(browser.name);
+    return results.map((browser) => {
+        const config = browsers.typeConfig(browser.name);
 
-                let configName: string;
-                if (browser.channel && browser.channel !== "stable" && browser.channel !== "release") {
-                    configName = `${browser.name}-${browser.channel}`;
-                } else {
-                    configName = browser.name;
-                }
+        let configName: string;
+        if (browser.channel && browser.channel !== "stable" && browser.channel !== "release") {
+            configName = `${browser.name}-${browser.channel}`;
+        } else {
+            configName = browser.name;
+        }
 
-                return assign({
-                    type: browser.name,
-                    name: configName,
-                    command: browser.path,
-                    version: browser.version
-                }, config);
-            });
-
-            resolve(available);
-        });
+        return assign({
+            type: browser.name,
+            name: configName,
+            command: browser.path,
+            version: browser.version
+        }, config);
     });
+
 }
 
 /**
