@@ -18,7 +18,7 @@
     "build": "tsc",
     "clean": "node -e \"require('fs').rmSync('dist', {recursive: true, force: true})\"",
     "prebuild": "npm run clean",
-    "test": "mocha --require tsx 'test/**/*.test.js'",
+    "test": "mocha --require tsx test/**/*.test.js",
     "prepublishOnly": "npm run build"
   },
   "files": [
