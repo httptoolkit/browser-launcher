@@ -9,16 +9,23 @@ declare module 'win-detect-browsers' {
 }
 
 declare module 'headless' {
-    function headless(callback: (err: Error | null, proc: any, display: number) => void): void;
+    import { ChildProcess } from 'child_process';
+    function headless(callback: (err: Error | null, proc: ChildProcess, display: number) => void): void;
     export default headless;
 }
 
 declare module 'simple-plist' {
+    export type PlistValue = string | number | boolean | Date | Buffer | PlistObject | PlistArray;
+    export interface PlistObject {
+        [key: string]: PlistValue;
+    }
+    export interface PlistArray extends Array<PlistValue> {}
+
     interface SimplePlist {
-        readFile(file: string, callback: (err: Error | null, data: any) => void): void;
-        readFileSync(file: string): any;
-        writeFile(file: string, data: any, callback: (err: Error | null) => void): void;
-        writeFileSync(file: string, data: any): void;
+        readFile(file: string, callback: (err: Error | null, data: PlistObject) => void): void;
+        readFileSync(file: string): PlistObject;
+        writeFile(file: string, data: PlistObject, callback: (err: Error | null) => void): void;
+        writeFileSync(file: string, data: PlistObject): void;
     }
     const plist: SimplePlist;
     export default plist;

@@ -1,11 +1,11 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import plist from 'simple-plist';
+import plist, { type PlistObject, type PlistValue } from 'simple-plist';
 import { findExecutableById } from '@httptoolkit/osx-find-executable';
 
-const infoCache: { [file: string]: any } = Object.create(null);
+const infoCache: { [file: string]: PlistObject } = Object.create(null);
 
-async function parse(file: string): Promise<any> {
+async function parse(file: string): Promise<PlistObject> {
     if (infoCache[file]) {
         return infoCache[file];
     }
@@ -17,7 +17,7 @@ async function parse(file: string): Promise<any> {
     }
 
     return new Promise((resolve, reject) => {
-        plist.readFile(file, (err: Error | null, data: any) => {
+        plist.readFile(file, (err: Error | null, data: PlistObject) => {
             if (err) {
                 reject(err);
             } else {
@@ -39,10 +39,14 @@ function getInfoPath(p: string): string {
     return path.join(p, 'Contents', 'Info.plist');
 }
 
-async function getInfoKey(bundleId: string, key: string): Promise<any> {
+async function getInfoKey(bundleId: string, key: string): Promise<string> {
     const bundlePath = await findBundle(bundleId);
     const data = await parse(getInfoPath(bundlePath));
-    return data[key];
+    const value = data[key];
+    if (typeof value !== 'string') {
+        throw new Error(`Expected string value for key ${key}, got ${typeof value}`);
+    }
+    return value;
 }
 
 export { findBundle as find, getInfoKey };

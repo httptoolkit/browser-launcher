@@ -196,7 +196,11 @@ setups.chrome = async function (browser: Browser, options: LaunchOptions): Promi
     const profile = options.profile !== undefined
         ? options.profile
         : browser.profile;
-    options.options.push(profile ? '--user-data-dir=' + profile : null as any);
+
+    if (profile) {
+        options.options.push('--user-data-dir=' + profile);
+    }
+
     if (options.proxy) {
         options.options.push('--proxy-server=' + options.proxy);
     }
@@ -235,12 +239,16 @@ setups.arc = setups.chrome;
 setups.phantomjs = async function (browser: Browser, options: LaunchOptions): Promise<SetupResult> {
     options.options = options.options || [];
 
+    const proxyArg = options.proxy
+        ? '--proxy=' + options.proxy.replace(/^http:\/\//, '')
+        : undefined;
+
     return {
-        args: options.options.concat([
-            options.proxy ? '--proxy=' + options.proxy.replace(/^http:\/\//, '') : null as any,
-            path.join(import.meta.dirname, '../res/phantom.js'),
-            [] as any
-        ]),
+        args: [
+            ...options.options,
+            ...(proxyArg ? [proxyArg] : []),
+            path.join(import.meta.dirname, '../res/phantom.js')
+        ],
         defaultArgs: []
     };
 };
@@ -286,7 +294,9 @@ setups.opera = async function (browser: Browser, options: LaunchOptions): Promis
 
     options.options = options.options || [];
     if (generation === 'blink') {
-        options.options.push(profile ? '--user-data-dir=' + profile : null as any);
+        if (profile) {
+            options.options.push('--user-data-dir=' + profile);
+        }
 
         if (options.proxy) {
             options.options.push('--proxy-server=' + options.proxy);
@@ -398,7 +408,7 @@ function runBrowser(config: Config, name: string, version: string): BrowserRunne
         // run a regular browser in a "headless" mode
         if (options.headless && !browser!.headless) {
             return new Promise((resolve, reject) => {
-                headless((err: Error | null, proc: any, display: number) => {
+                headless((err, proc, display) => {
                     if (err) {
                         return reject(err);
                     }
