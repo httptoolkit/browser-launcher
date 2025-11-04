@@ -5,34 +5,11 @@ import { detect } from './detect.js';
 import { runBrowser } from './run.js';
 import { createProfiles } from './create_profiles.js';
 import { BrowserInstance } from './instance.js';
-
-interface Config {
-    browsers: any[];
-}
-
-interface LaunchOptions {
-    browser: string;
-    version?: string;
-    proxy?: string;
-    options?: string[];
-    skipDefaults?: boolean;
-    detached?: boolean;
-    noProxy?: string | string[];
-    headless?: boolean;
-    prefs?: { [key: string]: any };
-    profile?: string | null;
-}
-
-interface Browser {
-    name: string;
-    version: string;
-    type: string;
-    command: string;
-}
+import type { Config, LaunchOptions, Browser, BrowserInfo } from './core-types.js';
 
 interface LaunchFunction {
     (uri: string, options: string | LaunchOptions): Promise<BrowserInstance>;
-    browsers: any[];
+    browsers: Browser[];
 }
 
 /**
@@ -85,11 +62,11 @@ async function getLauncher(configFile?: string): Promise<LaunchFunction> {
 /**
  * Detect available browsers
  */
-async function detectBrowsers(): Promise<Browser[]> {
+async function detectBrowsers(): Promise<BrowserInfo[]> {
     const browsers = await detect();
     return browsers.map((browser) => {
         return pick(browser, ['name', 'version', 'type', 'command']);
-    }) as Browser[];
+    }) as BrowserInfo[];
 }
 
 /**
@@ -97,7 +74,7 @@ async function detectBrowsers(): Promise<Browser[]> {
  */
 async function buildConfig(configDir: string): Promise<Config> {
     const browsers = await detect();
-    await createProfiles(browsers as any, configDir);
+    await createProfiles(browsers, configDir);
     return { browsers };
 }
 
@@ -127,5 +104,6 @@ async function updateBrowsers(configFile?: string): Promise<Config> {
 }
 
 export { getLauncher, detectBrowsers, updateBrowsers };
-export type { Config, LaunchOptions, Browser, LaunchFunction };
+export type { Config, LaunchOptions, Browser, BrowserInfo } from './core-types.js';
+export type { LaunchFunction };
 export { BrowserInstance } from './instance.js';

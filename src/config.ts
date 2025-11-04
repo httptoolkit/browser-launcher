@@ -2,12 +2,9 @@ import * as fs from 'fs/promises';
 import * as os from 'os';
 import * as path from 'path';
 import packageJson from '../package.json' with { type: 'json' };
+import type { Config } from './core-types.js';
 
 const defaultConfigFile = os.homedir() + '/.config/' + packageJson.name.split('/')[1] + '/config.json';
-
-interface Config {
-    browsers: any[];
-}
 
 interface ReadResult {
     data: Config | null;

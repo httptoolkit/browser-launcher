@@ -3,23 +3,15 @@ import { darwinBrowsers } from './darwin/index.js';
 import assign from 'lodash/assign.js';
 import { Browsers } from './browsers.js';
 import winDetectBrowsers from 'win-detect-browsers';
+import type { Browser } from './core-types.js';
 
 const browsers = new Browsers();
-
-interface DetectedBrowser {
-    type: string;
-    name: string;
-    command: string;
-    version: string;
-    profile?: string | boolean;
-    [key: string]: any;
-}
 
 /**
  * Detect all available browsers on Windows systems.
  * Returns an array of detected browsers.
  */
-async function detectWindows(): Promise<DetectedBrowser[]> {
+async function detectWindows(): Promise<Browser[]> {
     const results = await winDetectBrowsers();
 
     return results.map((browser) => {
@@ -131,7 +123,7 @@ async function checkUnix(commands: string[], regex: RegExp): Promise<{ version: 
  * Detect all available web browsers.
  * Returns an array of available browsers.
  */
-async function detect(): Promise<DetectedBrowser[]> {
+async function detect(): Promise<Browser[]> {
     if (process.platform === 'win32') {
         try {
             return await detectWindows();
@@ -177,12 +169,12 @@ async function detect(): Promise<DetectedBrowser[]> {
                 name: browserPlatform.darwin || browserPlatform.type,
                 command: command,
                 version: version
-            }) as DetectedBrowser;
+            }) as Browser;
         })
     );
 
     return results
-        .filter((result): result is PromiseFulfilledResult<DetectedBrowser> => result.status === 'fulfilled')
+        .filter((result): result is PromiseFulfilledResult<Browser> => result.status === 'fulfilled')
         .map(result => result.value);
 }
 

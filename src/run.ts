@@ -5,36 +5,7 @@ import * as path from 'path';
 import assign from 'lodash/assign.js';
 import { BrowserInstance } from './instance.js';
 import headless from 'headless';
-
-interface Browser {
-    type: string;
-    name: string;
-    version: string;
-    command: string;
-    profile: string | boolean;
-    processName?: string;
-    tempDir?: string;
-    neverStartFresh?: boolean;
-    [key: string]: any;
-}
-
-interface Config {
-    browsers: Browser[];
-}
-
-interface LaunchOptions {
-    browser?: string;
-    version?: string;
-    proxy?: string;
-    options?: string[];
-    skipDefaults?: boolean;
-    detached?: boolean;
-    noProxy?: string | string[];
-    headless?: boolean;
-    prefs?: { [key: string]: any };
-    profile?: string | null;
-    tempDir?: string;
-}
+import type { Browser, Config, LaunchOptions } from './core-types.js';
 
 type SetupResult = { args: string[]; defaultArgs: string[] };
 type BrowserRunner = (uri: string, options: LaunchOptions) => Promise<BrowserInstance>;
