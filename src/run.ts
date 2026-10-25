@@ -227,9 +227,10 @@ setups.chrome = async function (browser: Browser, options: LaunchOptions): Promi
 };
 setups.chromium = setups.chrome;
 
-// Brave, new MS Edge & Arc are all Chromium based, treated as identical:
+// Brave, Helium, new MS Edge & Arc are all Chromium based, treated as identical:
 setups.msedge = setups.chrome;
 setups.brave = setups.chrome;
+setups.helium = setups.chrome;
 setups.arc = setups.chrome;
 
 /**
