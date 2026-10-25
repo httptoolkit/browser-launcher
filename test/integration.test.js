@@ -30,7 +30,7 @@ describe('Browser Launcher Integration Tests', function() {
 
         it('should return valid browser types', async function() {
             const validTypes = ['chrome', 'chromium', 'firefox', 'safari', 'ie',
-                               'msedge', 'brave', 'opera', 'phantomjs', 'arc'];
+                               'msedge', 'brave', 'helium', 'opera', 'phantomjs', 'arc'];
 
             const browsers = await detectBrowsers();
             browsers.forEach(function(browser) {
