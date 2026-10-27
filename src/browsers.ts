@@ -87,6 +87,13 @@ const browserDefinitions: BrowserDefinitions = {
             'brave-nightly': ['brave-browser-nightly', 'brave-nightly']
         }
     },
+    helium: {
+        regex: /Helium (\S+)/,
+        profile: true,
+        variants: {
+            'helium': ['helium', 'helium-browser']
+        }
+    },
     opera: {
         regex: /Opera (\S+)/,
         profile: true,
