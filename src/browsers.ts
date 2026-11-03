@@ -12,7 +12,6 @@ interface BrowserConfig {
     variants?: BrowserVariants;
     platforms?: Platform[];
     headless?: boolean;
-    neverStartFresh?: boolean;
 }
 
 interface BrowserDefinitions {
@@ -102,11 +101,6 @@ const browserDefinitions: BrowserDefinitions = {
             'opera-gx': ['opera-gx'],
             'opera-crypto': ['opera-crypto']
         }
-    },
-    arc: {
-        profile: false, // Arc overrides Chromium profile handling
-        neverStartFresh: true, // Arc gets weird/crashy if you start fresh
-        platforms: ['darwin']
     }
 };
 

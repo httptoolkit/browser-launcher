@@ -6,7 +6,6 @@ export interface Browser {
     profile: string | boolean;
     processName?: string;
     tempDir?: string;
-    neverStartFresh?: boolean;
     headless?: boolean;
     regex?: RegExp;
 }

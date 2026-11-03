@@ -227,11 +227,10 @@ setups.chrome = async function (browser: Browser, options: LaunchOptions): Promi
 };
 setups.chromium = setups.chrome;
 
-// Brave, Helium, new MS Edge & Arc are all Chromium based, treated as identical:
+// Brave, Helium & new MS Edge are all Chromium based, treated as identical:
 setups.msedge = setups.chrome;
 setups.brave = setups.chrome;
 setups.helium = setups.chrome;
-setups.arc = setups.chrome;
 
 /**
  * Setup procedure for PhantomJS:
@@ -378,12 +377,8 @@ function runBrowser(config: Config, name: string, version: string): BrowserRunne
                 // open --wait-apps --new --fresh -a /Path/To/Executable <url> --args <rest of app args>
                 finalArgs.unshift(
                     '--wait-apps',
-                    ...(!browser!.neverStartFresh // Some browsers can't start fresh, so don't bother
-                        ? [
-                            '--new',
-                            '--fresh',
-                        ] : []
-                    ),
+                    '--new',
+                    '--fresh',
                     '-a',
                     browser!.command,
                     ...((finalArgs.length || uri) ? ['--args'] : []),

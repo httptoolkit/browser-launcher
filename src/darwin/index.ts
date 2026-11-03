@@ -33,8 +33,7 @@ const darwinBrowsers: { [name: string]: DarwinBrowser } = {
     'brave-beta': browser('com.brave.Browser.beta', 'CFBundleVersion'),
     'brave-dev': browser('com.brave.Browser.dev', 'CFBundleVersion'),
     'brave-nightly': browser('com.brave.Browser.nightly', 'CFBundleVersion'),
-    helium: browser('net.imput.helium', 'CFBundleShortVersionString'),
-    arc: browser('company.thebrowser.Browser', 'CFBundleVersion')
+    helium: browser('net.imput.helium', 'CFBundleShortVersionString')
 };
 
 export { darwinBrowsers };

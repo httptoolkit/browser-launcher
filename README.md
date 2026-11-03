@@ -32,7 +32,6 @@ At the moment, `browser-launcher` supports following browsers on Windows, Unix a
 - Opera
 - Safari (Mac only)
 - PhantomJS
-- Arc (experimental, Mac only)
 
 ## Setup
 
