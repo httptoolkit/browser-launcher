@@ -11,9 +11,9 @@ jobs:
         node-version: [22.x, latest]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
@@ -36,11 +36,11 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: '22.x'
+          node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
           cache: 'npm'
           cache-dependency-path: 'package.json'
@@ -69,16 +69,16 @@ jobs:
           fi
 
       # Make sure we have the latest npm for publishing:
-      - run: npm install -g npm@latest
+      - run: npm install -g npm@^11
 
       - name: Publish to npm
         run: |
           if [ "${{ steps.version-check.outputs.is_prerelease }}" == "true" ]; then
             echo "Publishing untagged prerelease"
-            npm publish --provenance --tag test
+            npm stage publish --provenance --tag test
             # We have to publish with a tag (so we use 'test') but we can clean it up:
             npm dist-tag rm @httptoolkit/browser-launcher test --silent
           else
             echo "Publishing stable release with 'latest' tag"
-            npm publish --provenance
+            npm stage publish --provenance
           fi
