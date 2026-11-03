@@ -312,6 +312,10 @@ setups.opera = async function (browser: Browser, options: LaunchOptions): Promis
     return { args: options.options, defaultArgs: engine[generation] };
 };
 
+if (process.platform === 'win32') {
+  setups['opera-gx'] = setups.chrome;
+}
+
 /**
  * Run a browser
  * @returns function which runs a browser, or undefined if browser can't be located
