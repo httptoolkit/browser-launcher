@@ -101,6 +101,13 @@ const browserDefinitions: BrowserDefinitions = {
             'opera-gx': ['opera-gx'],
             'opera-crypto': ['opera-crypto']
         }
+    },
+    ladybird: {
+        regex: /Version (\S+)/,
+        profile: true,
+        variants: {
+            'ladybird': ['ladybird', 'Ladybird']
+        }
     }
 };
 

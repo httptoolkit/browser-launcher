@@ -7,7 +7,7 @@ import { BrowserInstance } from './instance.js';
 import headless from 'headless';
 import type { Browser, Config, LaunchOptions } from './core-types.js';
 
-type SetupResult = { args: string[]; defaultArgs: string[] };
+type SetupResult = { args: string[]; defaultArgs: string[]; env?: NodeJS.ProcessEnv };
 type BrowserRunner = (uri: string, options: LaunchOptions) => Promise<BrowserInstance>;
 
 const setups: { [browserType: string]: (browser: Browser, options: LaunchOptions) => Promise<SetupResult> } = {};
@@ -313,6 +313,46 @@ setups.opera = async function (browser: Browser, options: LaunchOptions): Promis
 };
 
 /**
+ * Setup procedure for Ladybird:
+ * - collect command line arguments necessary to launch the browser
+ * - configure the proxy via environment variables, since there's no CLI option
+ */
+setups.ladybird = async function (browser: Browser, options: LaunchOptions): Promise<SetupResult> {
+    const args = options.options || [];
+    const profile = options.profile !== undefined
+        ? options.profile
+        : browser.profile;
+
+    if (profile) {
+        // Ladybird only accepts absolute profile paths
+        args.push('--profile-path=' + path.resolve(profile as string));
+    }
+
+    if (!options.proxy) {
+        return { args, defaultArgs: [] };
+    }
+
+    const proxy = options.proxy.includes('://')
+        ? options.proxy
+        : 'http://' + options.proxy;
+    const noProxy = formatNoProxyStandard(options);
+
+    return {
+        args,
+        defaultArgs: [],
+        // Ladybird reads the same variables as curl (lowercase first, ignoring HTTP_PROXY).
+        // We set both no_proxy forms because an empty no_proxy falls back to NO_PROXY, which
+        // would let exclusions inherited from our own environment leak through.
+        env: {
+            http_proxy: proxy,
+            https_proxy: proxy,
+            no_proxy: noProxy,
+            NO_PROXY: noProxy
+        }
+    };
+};
+
+/**
  * Run a browser
  * @returns function which runs a browser, or undefined if browser can't be located
  */
@@ -341,7 +381,7 @@ function runBrowser(config: Config, name: string, version: string): BrowserRunne
             browser = Object.assign({}, browser);
 
             // setup the browser
-            const { args, defaultArgs } = await setups[browser!.type](browser!, options);
+            const { args, defaultArgs, env: setupEnv } = await setups[browser!.type](browser!, options);
 
             let finalArgs = args;
             if (!options.skipDefaults) {
@@ -361,6 +401,9 @@ function runBrowser(config: Config, name: string, version: string): BrowserRunne
             if (options.proxy && env.HTTP_PROXY === undefined) {
                 env.HTTP_PROXY = options.proxy;
             }
+
+            // Browser-specific environment settings override everything else
+            Object.assign(env, setupEnv);
 
             // prepare the launch command for Windows systems
             if (process.platform === 'win32') {

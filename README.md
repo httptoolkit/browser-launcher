@@ -29,6 +29,7 @@ At the moment, `browser-launcher` supports following browsers on Windows, Unix a
 - Chromium-based Edge
 - Brave
 - Helium
+- Ladybird
 - Opera
 - Safari (Mac only)
 - PhantomJS
